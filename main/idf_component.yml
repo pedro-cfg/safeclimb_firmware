@@ -1,0 +1,9 @@
+dependencies:
+  espressif/led_strip: "^2.4.1"
+  lora:
+    path: ../components/lora
+  esp_driver_spi:
+    path: ${IDF_PATH}/components/esp_driver_spi
+  esp_driver_gpio:
+    path: ${IDF_PATH}/components/esp_driver_gpio
+

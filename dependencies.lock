@@ -1,0 +1,42 @@
+dependencies:
+  esp_driver_gpio:
+    dependencies: []
+    source:
+      path: /home/pedro/Documentos/ESP_IDE/esp-idf-v5.3.1/components/esp_driver_gpio
+      type: local
+    version: '*'
+  esp_driver_spi:
+    dependencies: []
+    source:
+      path: /home/pedro/Documentos/ESP_IDE/esp-idf-v5.3.1/components/esp_driver_spi
+      type: local
+    version: '*'
+  espressif/led_strip:
+    component_hash: 28c6509a727ef74925b372ed404772aeedf11cce10b78c3f69b3c66799095e2d
+    dependencies:
+    - name: idf
+      registry_url: https://components.espressif.com
+      require: private
+      version: '>=4.4'
+    source:
+      registry_url: https://components.espressif.com/
+      type: service
+    version: 2.5.5
+  idf:
+    source:
+      type: idf
+    version: 5.3.1
+  lora:
+    dependencies: []
+    source:
+      path: /home/pedro/ESP_IDE/safeclimb/components/lora
+      type: local
+    version: '*'
+direct_dependencies:
+- esp_driver_gpio
+- esp_driver_spi
+- espressif/led_strip
+- lora
+manifest_hash: 949c297a4c04434af22348cb2a519cc21daa5d0bceee1ab8868d0da734ee983b
+target: esp32
+version: 2.0.0
