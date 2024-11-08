@@ -238,15 +238,16 @@ void example_exec_write_event_env(prepare_type_env_t *prepare_write_env, esp_ble
 
 static void getString(char* str, int size)
 {
-
+	printf("ESCREVENDO STRING!");
+	printf("%s",str);
     if (position + size <= 1024) {
         memcpy(global_data + position, str, size);  
         position += size; 
         
-        if (str[size - 1] == '\n') {
-            global_data[position] = '\0';  // Garantir que a string esteja terminada corretamente
-            new_data = 1;  // Indique que novos dados foram recebidos
-            position = 0;  // Resetar a posição para a próxima string
+        if (str[size-1] == 0) {
+            global_data[position] = '\0';  
+            new_data = 1;  
+            position = 0;  
         }
     } else {
         // Caso o buffer esteja cheio, você pode adicionar uma lógica para lidar com isso
@@ -302,7 +303,6 @@ static void gatts_profile_a_event_handler(esp_gatts_cb_event_t event, esp_gatt_i
 	            ESP_LOGI(GATTS_TAG, "GATT_WRITE_EVT, value len %d, value :", param->write.len);
 	            esp_log_buffer_hex(GATTS_TAG, param->write.value, param->write.len);
 	            ESP_LOGI(GATTS_TAG, "Received: %s", (char*)param->write.value);
-	            getString((char*)param->write.value,param->write.len);
 	            if (gl_profile_tab[PROFILE_A_APP_ID].descr_handle == param->write.handle && param->write.len == 2){
 	                uint16_t descr_value = param->write.value[1]<<8 | param->write.value[0];
 	                if (descr_value == 0x0001){
@@ -334,15 +334,24 @@ static void gatts_profile_a_event_handler(esp_gatts_cb_event_t event, esp_gatt_i
 	                }else{
 	                    ESP_LOGE(GATTS_TAG, "unknown descr value");
 	                    esp_log_buffer_hex(GATTS_TAG, param->write.value, param->write.len);
+	                    getString((char*)param->write.value,param->write.len);
 	                }
 	
 	            }
+	            else 
+	            {
+					getString((char*)param->write.value,param->write.len);
+				}
 	        }
+	        else {
+				getString((char*)param->write.value,param->write.len);
+			}
 	        example_write_event_env(gatts_if, &a_prepare_write_env, param);
 	        break;
 	    }
 	    case ESP_GATTS_EXEC_WRITE_EVT:
 	        ESP_LOGI(GATTS_TAG,"ESP_GATTS_EXEC_WRITE_EVT");
+	        //getString((char*)param->write.value,param->write.len);
 	        esp_ble_gatts_send_response(gatts_if, param->write.conn_id, param->write.trans_id, ESP_GATT_OK, NULL);
 	        example_exec_write_event_env(&a_prepare_write_env, param);
 	        break;

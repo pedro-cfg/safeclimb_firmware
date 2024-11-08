@@ -8,7 +8,8 @@
 
 class BluetoothManager {
 private:
-
+	uint8_t telephone[15];
+	bool telephone_set;
 public:
     BluetoothManager();
     ~BluetoothManager();

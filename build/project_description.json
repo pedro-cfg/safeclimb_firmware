@@ -1,7 +1,7 @@
 {
     "version":            "1.1",
     "project_name":       "safeclimb",
-    "project_version":    "1",
+    "project_version":    "5cfdfea-dirty",
     "project_path":       "/home/pedro/ESP_IDE/safeclimb",
     "idf_path":           "/home/pedro/Documentos/ESP_IDE/esp-idf-v5.3.1",
     "build_dir":          "/home/pedro/ESP_IDE/safeclimb/build",
@@ -1210,7 +1210,7 @@
             "managed_reqs": [],
             "managed_priv_reqs": [ "esp_driver_gpio", "esp_driver_spi", "espressif__led_strip", "lora" ],
             "file": "/home/pedro/ESP_IDE/safeclimb/build/esp-idf/main/libmain.a",
-            "sources": [ "/home/pedro/ESP_IDE/safeclimb/main/main.cpp", "/home/pedro/ESP_IDE/safeclimb/main/bluetooth.c", "/home/pedro/ESP_IDE/safeclimb/main/BluetoothManager.cpp" ],
+            "sources": [ "/home/pedro/ESP_IDE/safeclimb/main/main.cpp", "/home/pedro/ESP_IDE/safeclimb/main/bluetooth.c", "/home/pedro/ESP_IDE/safeclimb/main/BluetoothManager.cpp", "/home/pedro/ESP_IDE/safeclimb/main/LoraManager.cpp" ],
             "include_dirs": [ "." ]
         },
         "mbedtls": {

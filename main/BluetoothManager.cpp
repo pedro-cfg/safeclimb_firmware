@@ -1,10 +1,12 @@
 #include "BluetoothManager.h"
 #include <cstdio>
+#include <string.h>
 #include <string>
 
 BluetoothManager::BluetoothManager()
 {
 	initBluetooth();
+	telephone_set = false;
 }
 
 BluetoothManager::~BluetoothManager()
@@ -44,7 +46,13 @@ extern "C" void BluetoothManager::receiveData()
 {
 	if(new_data)
 	{
-		new_data = 0;
+		//new_data = 0;
+		if(!telephone_set)
+		{
+			memcpy(telephone, global_data, 15);
+			printf("Telephone: %s",telephone);
+			telephone_set = true;
+		}
 		printf("Recebido: \n%s\n", global_data);	
 		//snprintf(global_data, sizeof(global_data), "%s", "");
 	}    
