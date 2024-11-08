@@ -10,6 +10,7 @@
 #include <sys/time.h>
 #include "esp_sleep.h"
 #include "parameters.h"
+#include "LoraPackage.h"
 
 class LoraManager {
 private:
@@ -26,13 +27,13 @@ private:
 	uint8_t buf[256];
 	struct timeval initial_time;
 	struct timeval transmission_time;
-	uint8_t* payload;
-	int payload_size;
-	uint8_t* package;
-	int package_size;
 	int tower_number;
-	int destiny_number;
 	bool sender;
+	struct timeval now;
+	
+	LoraPackage actualPackage;
+	LoraPackage receivedPackage;
+	LoraPackage newPackage;
 	
 	void Send1();
 	void Send2();
@@ -40,6 +41,7 @@ private:
 	void Receive2();
 	void Receive3();
 	void Receive4();
+	void Sleep();
 
 public:
     LoraManager();
@@ -49,8 +51,7 @@ public:
     void setInitialTime(struct timeval time);
     void sendPackage(uint8_t* pck, int size, int destiny);
     void receivePackage();
-    void encapsulate();
-	void getPayload();
+    
 };
 
 #endif 

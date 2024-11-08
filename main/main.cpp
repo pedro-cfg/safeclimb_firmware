@@ -24,9 +24,11 @@
 BluetoothManager btManager;
 LoraManager loraManager;
 
+bool main_tower = MAIN_TOWER;
+
 static void deep_sleep_register_rtc_timer_wakeup(void)
 {
-    const int wakeup_time_sec = SLEEP_TIME;
+    const int wakeup_time_sec = main_tower?SLEEP_TIME:SLEEP_TIME-5;
     printf("Enabling timer wakeup, %ds\n", wakeup_time_sec);
     ESP_ERROR_CHECK(esp_sleep_enable_timer_wakeup(wakeup_time_sec * 1000000));
 }
@@ -72,15 +74,23 @@ static void deep_sleep_register_rtc_timer_wakeup(void)
 
 void thread_LoRa(void *pvParameters)
 {
-	uint8_t buf[256];
-	loraManager.init();
 	
+	loraManager.init();
 	struct timeval now;
     gettimeofday(&now, NULL);
-	int send_len = sprintf((char *)buf,"Trasmissão!. O relógio está em %lld",now.tv_sec);
+    
+	if(main_tower)
+	{
+		uint8_t buf[256];
+		int send_len = sprintf((char *)buf,"Trasmissão!. O relógio está em %lld",now.tv_sec);
+		vTaskDelay(500 / portTICK_PERIOD_MS);
+		loraManager.sendPackage(buf, send_len, 0);
+	}
+	else
+	{
+		loraManager.receivePackage();
+	}
 	
-	loraManager.sendPackage(buf, send_len, 0);
-	//loraManager.receivePackage();
     loraManager.setInitialTime(now);
     
 	while(1) {
@@ -121,14 +131,14 @@ extern "C" void app_main()
     
     //btManager.turnOn();
 		
-//	TaskHandle_t xHandleLoRa = NULL;
-//    int paramLoRa = 2;
-//    xTaskCreate( thread_LoRa, "THREAD_LORA", STACK_SIZE, &paramLoRa, tskIDLE_PRIORITY, &xHandleLoRa );
-//    configASSERT( xHandleLoRa );
+	TaskHandle_t xHandleLoRa = NULL;
+    int paramLoRa = 2;
+    xTaskCreate( thread_LoRa, "THREAD_LORA", STACK_SIZE, &paramLoRa, tskIDLE_PRIORITY, &xHandleLoRa );
+    configASSERT( xHandleLoRa );
 
-	TaskHandle_t xHandleBluetooth= NULL;
-  	int paramBluetooth = 2;
- 	xTaskCreate( thread_Bluetooth, "THREAD_BLUETOOTH", STACK_SIZE, &paramBluetooth, tskIDLE_PRIORITY, &xHandleBluetooth );
- 	configASSERT( xHandleBluetooth );
+//	TaskHandle_t xHandleBluetooth= NULL;
+//  	int paramBluetooth = 2;
+// 	xTaskCreate( thread_Bluetooth, "THREAD_BLUETOOTH", STACK_SIZE, &paramBluetooth, tskIDLE_PRIORITY, &xHandleBluetooth );
+// 	configASSERT( xHandleBluetooth );
 
 }

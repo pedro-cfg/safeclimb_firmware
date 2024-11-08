@@ -4,6 +4,9 @@
 LoraManager::LoraManager()
 {
 	tower_number = TOWER_NUMBER;
+	LoraPackage actualPackage;
+	LoraPackage receivedPackage;
+	LoraPackage newPackage;
 }
 
 LoraManager::~LoraManager()
@@ -31,11 +34,10 @@ void LoraManager::init()
 void LoraManager::exec()
 {
 	
-	struct timeval now;
     gettimeofday(&now, NULL);
     if((int)(now.tv_sec) - (int)(initial_time.tv_sec) >= GLOBAL_TIMEOUT)
     {
-		esp_deep_sleep_start();
+		Sleep();
 	}
     
 	switch(state)
@@ -65,26 +67,24 @@ void LoraManager::exec()
 
 void LoraManager::Send1()
 {
-	struct timeval now;
     gettimeofday(&now, NULL);
     transmission_time = now;
-	vTaskDelay(100 / portTICK_PERIOD_MS);
-	lora_send_packet(package, package_size);
+	//vTaskDelay(100 / portTICK_PERIOD_MS);
+	lora_send_packet(actualPackage.getPackage(), actualPackage.getPackageSize());
 	
-	ESP_LOGI("SEND_1:", "%d byte packet sent:[%.*s]", payload_size, payload_size, payload);
+	ESP_LOGI("SEND_1:", "%d byte packet sent:[%.*s]", actualPackage.getPayloadSize(), actualPackage.getPayloadSize(), actualPackage.getPayload());
 	vTaskDelay(1);
 	state = Receive2_;
 }
 
 void LoraManager::Send2()
 {
-	struct timeval now;
     gettimeofday(&now, NULL);
     transmission_time = now;
-	vTaskDelay(100 / portTICK_PERIOD_MS);
-	uint8_t string[13] = "Confirmation";
-	lora_send_packet(string, 13);
-	ESP_LOGI("SEND_2:", "%d byte packet sent:[%.*s]", 13, 13, string);
+	//vTaskDelay(100 / portTICK_PERIOD_MS);
+	newPackage.setPayload((uint8_t*)"CONFIRMATION",13,actualPackage.getDestinyNumber());
+	lora_send_packet(newPackage.getPackage(), newPackage.getPackageSize());
+	ESP_LOGI("SEND_2:", "%d byte packet sent:[%.*s]", newPackage.getPayloadSize(),newPackage.getPayloadSize(),newPackage.getPayload());
 	vTaskDelay(1);
 	state = Receive4_;
 }
@@ -94,42 +94,53 @@ void LoraManager::Receive1()
 	lora_receive(); 
 	if (lora_received()) {
 		int rxLen = lora_receive_packet(buf, sizeof(buf));
-		package = buf;
-		package_size = rxLen;
-		receivePackage();
-		ESP_LOGI("RECEIVE_1:", "%d byte packet received:[%.*s]", payload_size, payload_size, payload);
+		actualPackage.setPackage(buf,rxLen);
+		ESP_LOGI("RECEIVE_1:", "%d byte packet received:[%.*s]", actualPackage.getPayloadSize(), actualPackage.getPayloadSize(), actualPackage.getPayload());
 //		rssi = lora_packet_rssi();
 //		snr = lora_packet_snr();
 //		printf("The RSSI value is: %d\n", rssi);
 //		printf("The SNR value is: %d\n\n", snr);
-		vTaskDelay(1);
+		vTaskDelay(500 / portTICK_PERIOD_MS);
 		state = Send1_;
 	}
 }
 
 void LoraManager::Receive2()
 {
-	struct timeval now;
-    gettimeofday(&now, NULL);
-	lora_receive();
-	if (lora_received()) {
-		int rxLen = lora_receive_packet(buf, sizeof(buf));
-		ESP_LOGI("RECEIVE_2:", "%d byte packet received", rxLen);
-		vTaskDelay(1);
-		if(destiny_number == tower_number)
-		{
-			state = Send2_;
-			printf("Package received at destiny. Sending confirmation...");
-		}
-		else
-		{
-			state = Receive3_;
-		}
-	}
-	else if((int)(now.tv_sec) - (int)(transmission_time.tv_sec) >= LOCAL_TIMEOUT)
+	if(actualPackage.getDestinyNumber() == tower_number)
 	{
-		state = Send1_;
+		state = Send2_;
+		printf("Package received at destiny. Sending confirmation...");
+		vTaskDelay(4000 / portTICK_PERIOD_MS);
 	}
+	else
+	{
+		lora_receive();
+	    gettimeofday(&now, NULL);
+		if (lora_received()) {
+			int rxLen = lora_receive_packet(buf, sizeof(buf));
+			receivedPackage.setPackage(buf,rxLen);
+			ESP_LOGI("RECEIVE_2:", "%d byte packet received:[%.*s]", receivedPackage.getPayloadSize(), receivedPackage.getPayloadSize(), receivedPackage.getPayload());
+			vTaskDelay(1);
+			if(memcmp(receivedPackage.getPayload(), actualPackage.getPayload(), actualPackage.getPayloadSize()) == 0)
+			{
+				state = Receive3_;
+			}
+			else if(memcmp((uint8_t*)"CONFIRMATION", receivedPackage.getPayload(), receivedPackage.getPayloadSize()) == 0)
+			{
+				lora_send_packet((uint8_t*)"", 1);
+				vTaskDelay(500 / portTICK_PERIOD_MS);
+				state = Send2_;
+			}
+		
+		}
+		else if((int)(now.tv_sec) - (int)(transmission_time.tv_sec) >= SEND1_TIMEOUT)
+		{
+			state = Send1_;
+		}
+			
+	}
+	
 }
 
 void LoraManager::Receive3()
@@ -137,9 +148,14 @@ void LoraManager::Receive3()
 	lora_receive(); 
 	if (lora_received()) {
 		int rxLen = lora_receive_packet(buf, sizeof(buf));
-		ESP_LOGI("RECEIVE_3:", "%d byte packet received", rxLen);
-		vTaskDelay(1);
-		state = Send2_;
+		receivedPackage.setPackage(buf,rxLen);
+		ESP_LOGI("RECEIVE_3:", "%d byte packet received:[%.*s]", receivedPackage.getPayloadSize(), receivedPackage.getPayloadSize(), receivedPackage.getPayload());
+		if(memcmp((uint8_t*)"CONFIRMATION", receivedPackage.getPayload(), receivedPackage.getPayloadSize()) == 0)
+		{
+			lora_send_packet((uint8_t*)"", 1);
+			vTaskDelay(500 / portTICK_PERIOD_MS);
+			state = Send2_;
+		}
 	}
 }
 
@@ -148,18 +164,18 @@ void LoraManager::Receive4()
 	if(sender)
 	{
 		printf("Communication Successful");	
-		esp_deep_sleep_start();
+		Sleep();
 	}
-	struct timeval now;
-    gettimeofday(&now, NULL);
 	lora_receive();
+	
+    gettimeofday(&now, NULL);
 	if (lora_received()) {
 		int rxLen = lora_receive_packet(buf, sizeof(buf));
 		ESP_LOGI("RECEIVE_4:", "%d byte packet received", rxLen);
 		vTaskDelay(1);
-		esp_deep_sleep_start();
+		Sleep();
 	}
-	else if((int)(now.tv_sec) - (int)(transmission_time.tv_sec) >= LOCAL_TIMEOUT)
+	else if((int)(now.tv_sec) - (int)(transmission_time.tv_sec) >= SEND2_TIMEOUT)
 	{
 		state = Send2_;
 	}
@@ -173,11 +189,7 @@ void LoraManager::setInitialTime(struct timeval time)
 
 void LoraManager::sendPackage(uint8_t* pck, int size, int destiny)
 {
-	payload = pck;
-	payload_size = size;
-	destiny_number = destiny;
-	encapsulate();
-	
+	actualPackage.setPayload(pck,size,destiny);
 	sender = true;
 	state = Send1_;
 }
@@ -186,31 +198,12 @@ void LoraManager::receivePackage()
 {
 	state = Receive1_;
 }
-
-void LoraManager::encapsulate()
+	
+void LoraManager::Sleep()
 {
-	int header_size = 1;
-	int new_len = payload_size + header_size;
-	
-	uint8_t pack[new_len];
-	pack[0] = destiny_number;
-	memcpy(pack + header_size, payload, payload_size);	
-	
-	package = pack;
-	package_size = new_len;
+	ESP_LOGI("LORA:", "Entering Sleep Mode");
+	lora_sleep();
+	lora_close();
+	esp_deep_sleep_start();
 }
 
-void LoraManager::getPayload()
-{
-	int header_size = 1;
-	int new_len = package_size - header_size;
-	
-	uint8_t pay[new_len];
-	memcpy(pay, package + header_size, new_len);	
-	
-	destiny_number = package[0];
-	payload = pay;
-	payload_size = new_len;
-	
-}
-	
