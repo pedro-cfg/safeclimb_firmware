@@ -16,10 +16,16 @@
 #include "led_strip.h"
 #include "driver/spi_master.h"
 #include "sdkconfig.h"
+#include "esp32-dht11.h"
 
 #include "parameters.h"
 #include "BluetoothManager.h"
+#include "Temperature.h"
 #include "LoraManager.h"
+#include "Wind.h"
+
+#define CONFIG_DHT11_PIN GPIO_NUM_4
+#define CONFIG_CONNECTION_TIMEOUT 5
 
 BluetoothManager btManager;
 LoraManager loraManager;
@@ -121,6 +127,37 @@ void thread_Bluetooth(void *pvParameters)
 	} 
 }
 
+//extern "C" {
+//    void temperature(); // Function prototype if it's defined in a C source file.
+//}
+
+void thread_sensors(void *pvParameters)
+{
+//	printf("Sensors ON!\n");
+//	while(1) {
+//		temperature();
+//	} 
+
+//    dht11_t dht11_sensor;
+//    dht11_sensor.dht11_pin = CONFIG_DHT11_PIN;
+//
+//    // Read data
+//    while(1)
+//    {
+//      if(!dht11_read(&dht11_sensor, CONFIG_CONNECTION_TIMEOUT))
+//      {  
+//        printf("[Temperature]> %.2f \n",dht11_sensor.temperature);
+//        printf("[Humidity]> %.2f \n",dht11_sensor.humidity);
+//      }
+//      vTaskDelay(2000/portTICK_PERIOD_MS);
+//    } 
+
+	while(1){
+		wind_sensor();
+	}
+}
+
+
 extern "C" void app_main()
 {	
     
@@ -131,14 +168,19 @@ extern "C" void app_main()
     
     //btManager.turnOn();
 		
-	TaskHandle_t xHandleLoRa = NULL;
-    int paramLoRa = 2;
-    xTaskCreate( thread_LoRa, "THREAD_LORA", STACK_SIZE, &paramLoRa, tskIDLE_PRIORITY, &xHandleLoRa );
-    configASSERT( xHandleLoRa );
+//	TaskHandle_t xHandleLoRa = NULL;
+//    int paramLoRa = 2;
+//    xTaskCreate( thread_LoRa, "THREAD_LORA", STACK_SIZE, &paramLoRa, tskIDLE_PRIORITY, &xHandleLoRa );
+//    configASSERT( xHandleLoRa );
 
 //	TaskHandle_t xHandleBluetooth= NULL;
 //  	int paramBluetooth = 2;
 // 	xTaskCreate( thread_Bluetooth, "THREAD_BLUETOOTH", STACK_SIZE, &paramBluetooth, tskIDLE_PRIORITY, &xHandleBluetooth );
 // 	configASSERT( xHandleBluetooth );
+
+	TaskHandle_t xHandleSensors= NULL;
+  	int paramSensors = 2;
+ 	xTaskCreate( thread_sensors, "THREAD_SENSORS", STACK_SIZE, &paramSensors, tskIDLE_PRIORITY, &xHandleSensors );
+ 	configASSERT( xHandleSensors );
 
 }

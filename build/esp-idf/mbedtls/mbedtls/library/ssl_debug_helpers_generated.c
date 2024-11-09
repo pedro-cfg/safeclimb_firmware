@@ -1,1 +1,1 @@
-/home/pedro/Documentos/ESP_IDE/esp-idf-v5.3.1/components/mbedtls/mbedtls/library/ssl_debug_helpers_generated.c
+/home/caio/esp/esp-idf-v5.3.1/components/mbedtls/mbedtls/library/ssl_debug_helpers_generated.c

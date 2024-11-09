@@ -1,14 +1,26 @@
 dependencies:
+  1-wire:
+    dependencies: []
+    source:
+      path: /home/caio/workspace/safeclimb_firmware/components/1-wire
+      type: local
+    version: '*'
+  dht11:
+    dependencies: []
+    source:
+      path: /home/caio/workspace/safeclimb_firmware/components/dht11
+      type: local
+    version: '*'
   esp_driver_gpio:
     dependencies: []
     source:
-      path: /home/pedro/Documentos/ESP_IDE/esp-idf-v5.3.1/components/esp_driver_gpio
+      path: /home/caio/esp/esp-idf-v5.3.1/components/esp_driver_gpio
       type: local
     version: '*'
   esp_driver_spi:
     dependencies: []
     source:
-      path: /home/pedro/Documentos/ESP_IDE/esp-idf-v5.3.1/components/esp_driver_spi
+      path: /home/caio/esp/esp-idf-v5.3.1/components/esp_driver_spi
       type: local
     version: '*'
   espressif/led_strip:
@@ -29,14 +41,23 @@ dependencies:
   lora:
     dependencies: []
     source:
-      path: /home/pedro/ESP_IDE/safeclimb/components/lora
+      path: /home/caio/workspace/safeclimb_firmware/components/lora
+      type: local
+    version: '*'
+  temperature:
+    dependencies: []
+    source:
+      path: /home/caio/workspace/safeclimb_firmware/components/temperature
       type: local
     version: '*'
 direct_dependencies:
+- 1-wire
+- dht11
 - esp_driver_gpio
 - esp_driver_spi
 - espressif/led_strip
 - lora
-manifest_hash: 949c297a4c04434af22348cb2a519cc21daa5d0bceee1ab8868d0da734ee983b
+- temperature
+manifest_hash: e4f0e7f9aba4353b495f1a769cd15b7fc703175ad507146d5923e1620a5b61dd
 target: esp32
 version: 2.0.0
