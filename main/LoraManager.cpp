@@ -134,7 +134,7 @@ void LoraManager::Receive2()
 			}
 		
 		}
-		else if((int)(now.tv_sec) - (int)(transmission_time.tv_sec) >= SEND1_TIMEOUT)
+		else if((int)(now.tv_sec) - (int)(transmission_time.tv_sec) >= LOCAL_TIMEOUT)
 		{
 			state = Send1_;
 		}
@@ -175,7 +175,7 @@ void LoraManager::Receive4()
 		vTaskDelay(1);
 		Sleep();
 	}
-	else if((int)(now.tv_sec) - (int)(transmission_time.tv_sec) >= SEND2_TIMEOUT)
+	else if((int)(now.tv_sec) - (int)(transmission_time.tv_sec) >= LOCAL_TIMEOUT)
 	{
 		state = Send2_;
 	}
@@ -205,5 +205,8 @@ void LoraManager::Sleep()
 	lora_sleep();
 	lora_close();
 	esp_deep_sleep_start();
+//	gettimeofday(&now, NULL);
+//	setInitialTime(now);
+//	sendPackage((uint8_t*)"Opa",3, 0);
 }
 

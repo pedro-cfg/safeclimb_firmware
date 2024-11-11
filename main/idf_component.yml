@@ -2,8 +2,8 @@ dependencies:
   espressif/led_strip: "^2.4.1"
   lora:
     path: ../components/lora
-  1-wire:
-    path: ../components/1-wire
+  one-wire:
+    path: ../components/one-wire
   temperature:
     path: ../components/temperature
   dht11:

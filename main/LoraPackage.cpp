@@ -2,7 +2,7 @@
 
 LoraPackage::LoraPackage()
 {
-	
+	creation = true;
 }
 
 LoraPackage::~LoraPackage()
@@ -15,7 +15,10 @@ void LoraPackage::encapsulate()
     int header_size = 1;
     int new_len = payload_size + header_size;
 
-    delete[] package;
+	if(!creation)
+		delete[] package;
+	creation = false;
+
     package = new uint8_t[new_len];
     package_size = new_len;
 
@@ -28,7 +31,10 @@ void LoraPackage::decapsulate()
     int header_size = 1;
     int new_len = package_size - header_size;
 
-    delete[] payload;
+	if(!creation)
+		delete[] payload;
+	creation = false;	
+
     payload = new uint8_t[new_len];
     payload_size = new_len;
 

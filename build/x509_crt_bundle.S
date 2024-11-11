@@ -1,4 +1,4 @@
-/* * Data converted from /home/caio/workspace/safeclimb_firmware/build/esp-idf/mbedtls/x509_crt_bundle
+/* * Data converted from /home/pedro/ESP_IDE/safeclimb/build/esp-idf/mbedtls/x509_crt_bundle
  */
 .data
 #if !defined (__APPLE__) && !defined (__linux__)

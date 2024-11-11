@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <cstring>
 #include "parameters.h"
+#include <memory>
 
 
 class LoraPackage {
@@ -13,6 +14,7 @@ private:
 	uint8_t* package;
 	int package_size;
 	int destiny_number;
+	bool creation;
 	
 	void encapsulate();
 	void decapsulate();

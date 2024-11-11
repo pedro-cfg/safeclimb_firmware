@@ -23,14 +23,18 @@
 #include "Temperature.h"
 #include "LoraManager.h"
 #include "Wind.h"
+#include "Battery.h"
 
 #define CONFIG_DHT11_PIN GPIO_NUM_4
 #define CONFIG_CONNECTION_TIMEOUT 5
 
 BluetoothManager btManager;
 LoraManager loraManager;
+Battery battery;
+uint8_t buf[256];
 
 bool main_tower = MAIN_TOWER;
+bool server_tower = SERVER_TOWER;
 
 static void deep_sleep_register_rtc_timer_wakeup(void)
 {
@@ -86,9 +90,12 @@ void thread_LoRa(void *pvParameters)
     gettimeofday(&now, NULL);
     
 	if(main_tower)
-	{
-		uint8_t buf[256];
-		int send_len = sprintf((char *)buf,"Trasmissão!. O relógio está em %lld",now.tv_sec);
+    {
+		int voltage = battery.measure();
+		int charge = (voltage-540)/0.4;
+		if(charge > 100) charge = 100;
+		else if(charge < 0) charge = 0;
+		int send_len = sprintf((char *)buf,"Voltage: %d, charge = %d%%", voltage, charge);
 		vTaskDelay(500 / portTICK_PERIOD_MS);
 		loraManager.sendPackage(buf, send_len, 0);
 	}
@@ -96,6 +103,7 @@ void thread_LoRa(void *pvParameters)
 	{
 		loraManager.receivePackage();
 	}
+	
 	
     loraManager.setInitialTime(now);
     
@@ -153,7 +161,13 @@ void thread_sensors(void *pvParameters)
 //    } 
 
 	while(1){
-		wind_sensor();
+		//wind_sensor();
+//		int voltage = battery.measure();
+//		int charge = (voltage-540)/0.4;
+//		if(charge > 100) charge = 100;
+//		else if(charge < 0) charge = 0;
+//		printf("Voltage: %d, charge = %d%%\n", voltage, charge);
+//		vTaskDelay(1980/portTICK_PERIOD_MS);
 	}
 }
 
@@ -168,19 +182,19 @@ extern "C" void app_main()
     
     //btManager.turnOn();
 		
-//	TaskHandle_t xHandleLoRa = NULL;
-//    int paramLoRa = 2;
-//    xTaskCreate( thread_LoRa, "THREAD_LORA", STACK_SIZE, &paramLoRa, tskIDLE_PRIORITY, &xHandleLoRa );
-//    configASSERT( xHandleLoRa );
+	TaskHandle_t xHandleLoRa = NULL;
+    int paramLoRa = 2;
+    xTaskCreate( thread_LoRa, "THREAD_LORA", STACK_SIZE, &paramLoRa, tskIDLE_PRIORITY, &xHandleLoRa );
+    configASSERT( xHandleLoRa );
 
 //	TaskHandle_t xHandleBluetooth= NULL;
 //  	int paramBluetooth = 2;
 // 	xTaskCreate( thread_Bluetooth, "THREAD_BLUETOOTH", STACK_SIZE, &paramBluetooth, tskIDLE_PRIORITY, &xHandleBluetooth );
 // 	configASSERT( xHandleBluetooth );
 
-	TaskHandle_t xHandleSensors= NULL;
-  	int paramSensors = 2;
- 	xTaskCreate( thread_sensors, "THREAD_SENSORS", STACK_SIZE, &paramSensors, tskIDLE_PRIORITY, &xHandleSensors );
- 	configASSERT( xHandleSensors );
+//	TaskHandle_t xHandleSensors= NULL;
+//  	int paramSensors = 2;
+// 	xTaskCreate( thread_sensors, "THREAD_SENSORS", STACK_SIZE, &paramSensors, tskIDLE_PRIORITY, &xHandleSensors );
+// 	configASSERT( xHandleSensors );
 
 }
