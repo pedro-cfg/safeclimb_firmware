@@ -7,6 +7,7 @@ BluetoothManager::BluetoothManager()
 {
 	initBluetooth();
 	telephone_set = false;
+	data_received = false;
 }
 
 BluetoothManager::~BluetoothManager()
@@ -46,15 +47,29 @@ extern "C" void BluetoothManager::receiveData()
 {
 	if(new_data)
 	{
-		//new_data = 0;
-		if(!telephone_set)
-		{
-			memcpy(telephone, global_data, 15);
-			printf("Telephone: %s",telephone);
-			telephone_set = true;
-		}
-		printf("Recebido: \n%s\n", global_data);	
+		new_data = 0;
+		data_received = true;
+//		if(!telephone_set)
+//		{
+//			memcpy(telephone, global_data, 15);
+//			//printf("Telephone: %s",telephone);
+//			telephone_set = true;
+//		}
+		//printf("Recebido: \n%s\n", global_data);
+		data = global_data;	
 		//snprintf(global_data, sizeof(global_data), "%s", "");
 	}    
 	
+}
+
+bool BluetoothManager::dataReceived()
+{
+	bool aux = data_received;
+	data_received = false;
+	return aux;
+}
+
+std::string BluetoothManager::getData()
+{
+	return data;
 }

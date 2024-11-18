@@ -1,7 +1,7 @@
 {
     "version":            "1.1",
     "project_name":       "safeclimb",
-    "project_version":    "6433319-dirty",
+    "project_version":    "5653e2a-dirty",
     "project_path":       "/home/pedro/ESP_IDE/safeclimb",
     "idf_path":           "/home/pedro/Documentos/ESP_IDE/esp-idf-v5.3.1",
     "build_dir":          "/home/pedro/ESP_IDE/safeclimb/build",

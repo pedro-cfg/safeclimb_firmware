@@ -15,6 +15,7 @@
 #include "esp_pm.h"
 #include "led_strip.h"
 #include "driver/spi_master.h"
+#include "rom/gpio.h"
 #include "sdkconfig.h"
 #include "esp32-dht11.h"
 
@@ -28,13 +29,26 @@
 #define CONFIG_DHT11_PIN GPIO_NUM_4
 #define CONFIG_CONNECTION_TIMEOUT 5
 
+#define BUTTON_PIN GPIO_NUM_27
+
 BluetoothManager btManager;
 LoraManager loraManager;
 Battery battery;
 uint8_t buf[256];
 
+TaskHandle_t xHandleBluetooth= NULL;
+TaskHandle_t xHandleLoRa = NULL;
+
 bool main_tower = MAIN_TOWER;
 bool server_tower = SERVER_TOWER;
+
+bool bluetooth_comm = false;
+
+static void IRAM_ATTR gpio_interrupt_handler(void *args)
+{	
+	bluetooth_comm = true;
+	xTaskNotifyGive(xHandleBluetooth);
+}
 
 static void deep_sleep_register_rtc_timer_wakeup(void)
 {
@@ -43,44 +57,17 @@ static void deep_sleep_register_rtc_timer_wakeup(void)
     ESP_ERROR_CHECK(esp_sleep_enable_timer_wakeup(wakeup_time_sec * 1000000));
 }
 
-//void thread_LoRa_Send(void *pvParameters)
-//{
-//	int button = 1;
-//	while(1) {
-//		button = gpio_get_level(BUTTON_GPIO);
-//		if(button == 0)
-//		{
-//			vTaskDelay(1);
-//			lora_send_packet((uint8_t*)"Hello", 5);
-//			printf("package sent\n");
-//			vTaskDelay(2000 / portTICK_PERIOD_MS);
-//		}
-//		vTaskDelay(100 / portTICK_PERIOD_MS);
-//	} 
-//}
-//
-//void thread_LoRa_Receive(void *pvParameters)
-//{
-//	int rssi;
-//	int snr;
-//	ESP_LOGI(pcTaskGetName(NULL), "Start");
-//	uint8_t buf[256]; // Maximum Payload 
-//	while(1) {
-//		lora_receive(); 
-//		if (lora_received()) {
-//			int rxLen = lora_receive_packet(buf, sizeof(buf));
-//			ESP_LOGI(pcTaskGetName(NULL), "%d byte packet received:[%.*s]", rxLen, rxLen, buf);
-//			rssi = lora_packet_rssi();
-//			snr = lora_packet_snr();
-//			printf("The RSSI value is: %d\n", rssi);
-//			printf("The SNR value is: %d\n\n", snr);
-//			vTaskDelay(1); // Avoid WatchDog alerts
-//			lora_send_packet((uint8_t*)"Received", 8);
-//			printf("response sent\n");
-//		}
-//		vTaskDelay(1); // Avoid WatchDog alerts
-//	} 
-//}
+void deep_sleep_register_ext0_wakeup(void)
+{
+    printf("Enabling EXT0 wakeup on pin GPIO%d\n", BUTTON_PIN);
+    ESP_ERROR_CHECK(esp_sleep_enable_ext0_wakeup((gpio_num_t)BUTTON_PIN, 0));
+
+    // Configure pullup/downs via RTCIO to tie wakeup pins to inactive level during deepsleep.
+    // EXT0 resides in the same power domain (RTC_PERIPH) as the RTC IO pullup/downs.
+    // No need to keep that power domain explicitly, unlike EXT1.
+    ESP_ERROR_CHECK(gpio_pullup_en((gpio_num_t)BUTTON_PIN));
+    ESP_ERROR_CHECK(gpio_pulldown_dis((gpio_num_t)BUTTON_PIN));
+}
 
 void thread_LoRa(void *pvParameters)
 {
@@ -89,15 +76,16 @@ void thread_LoRa(void *pvParameters)
 	struct timeval now;
     gettimeofday(&now, NULL);
     
-	if(main_tower)
+	if(main_tower && !bluetooth_comm)
     {
-		int voltage = battery.measure();
-		int charge = (voltage-540)/0.4;
-		if(charge > 100) charge = 100;
-		else if(charge < 0) charge = 0;
-		int send_len = sprintf((char *)buf,"Voltage: %d, charge = %d%%", voltage, charge);
+//		int voltage = battery.measure();
+//		int charge = (voltage-370)/0.3;
+//		if(charge > 100) charge = 100;
+//		else if(charge < 0) charge = 0;
+		int send_len = sprintf((char *)buf,"MEASUREMENT");
 		vTaskDelay(500 / portTICK_PERIOD_MS);
-		loraManager.sendPackage(buf, send_len, 0);
+		loraManager.sendPackage(buf, send_len, 0,false,false,15,10,20,100,60);
+//		loraManager.sendPackage(buf, send_len, 0,true);
 	}
 	else
 	{
@@ -108,36 +96,43 @@ void thread_LoRa(void *pvParameters)
     loraManager.setInitialTime(now);
     
 	while(1) {
+		if(loraManager.teste)
+		{
+			loraManager.teste = false;
+			vTaskDelay(10000 / portTICK_PERIOD_MS);
+			loraManager.sendPackage((uint8_t*)"Deu certo!", 11,loraManager.getBluetoothTower(),true,true);
+		}
+		
 		loraManager.exec();
 	} 
 }
 
 void thread_Bluetooth(void *pvParameters)
 {
-	std::string str;
-	int i = 0;
-	ESP_LOGI(pcTaskGetName(NULL), "Start");
+	ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+	printf("Initializing Bluetooth\n");
 	btManager.turnOn();
+	loraManager.setKeepAlive(true);
+	
 	while(1) {
+		btManager.receiveData();
+		if(btManager.dataReceived())
+		{
+			printf("Frase: %s",btManager.getData().c_str());
+			int send_len = sprintf((char *)buf,"%s", btManager.getData().c_str());
+			loraManager.sendPackage(buf, send_len, 0,true,true);
+		}
 		
-//		for(int j = 0; j<10; j++)
-//		{
-			str = "Olá! Esse é o envio de número " + std::to_string(i); 
-	        const uint8_t* data = reinterpret_cast<const uint8_t*>(str.c_str());
-	        btManager.sendData(data, str.size());
-			printf("New Data!\n");
-			btManager.receiveData();
-			i++;
-			vTaskDelay(3000 / portTICK_PERIOD_MS); 
-//		}
-//		btManager.turnOff();
-//		vTaskDelay(20000 / portTICK_PERIOD_MS); 
+		if(loraManager.getMessageBluetoothReady())
+		{
+	        btManager.sendData(reinterpret_cast<const uint8_t*>(loraManager.getMessageBluetooth()), loraManager.getMessageBluetoothSize());
+		}
+
+		vTaskDelay(100 / portTICK_PERIOD_MS); 
 	} 
+	
 }
 
-//extern "C" {
-//    void temperature(); // Function prototype if it's defined in a C source file.
-//}
 
 void thread_sensors(void *pvParameters)
 {
@@ -171,26 +166,36 @@ void thread_sensors(void *pvParameters)
 	}
 }
 
-
 extern "C" void app_main()
-{	
-    
+{	    
     //Configure DeepSleep
     deep_sleep_register_rtc_timer_wakeup();
-    
-    printf("Teste\n");
+    deep_sleep_register_ext0_wakeup();
+
+	gpio_pad_select_gpio((gpio_num_t)BUTTON_PIN);
+    gpio_set_direction((gpio_num_t)BUTTON_PIN, GPIO_MODE_INPUT);
+    gpio_pullup_en((gpio_num_t)BUTTON_PIN);
+    gpio_pulldown_dis((gpio_num_t)BUTTON_PIN);
+    gpio_set_intr_type((gpio_num_t)BUTTON_PIN, GPIO_INTR_LOW_LEVEL);
+
+    gpio_install_isr_service(0);
+    gpio_isr_handler_add(BUTTON_PIN, gpio_interrupt_handler, (void *)BUTTON_PIN);
     
     //btManager.turnOn();
 		
-	TaskHandle_t xHandleLoRa = NULL;
-    int paramLoRa = 2;
+  	int paramBluetooth = 2;
+ 	xTaskCreate( thread_Bluetooth, "THREAD_BLUETOOTH", STACK_SIZE, &paramBluetooth, tskIDLE_PRIORITY, &xHandleBluetooth );
+ 	configASSERT( xHandleBluetooth );
+ 	
+ 	if(esp_sleep_get_wakeup_cause() == ESP_SLEEP_WAKEUP_EXT0)
+ 	{
+		 xTaskNotifyGive(xHandleBluetooth);
+		 bluetooth_comm = true;
+	}
+		
+	int paramLoRa = 2;
     xTaskCreate( thread_LoRa, "THREAD_LORA", STACK_SIZE, &paramLoRa, tskIDLE_PRIORITY, &xHandleLoRa );
     configASSERT( xHandleLoRa );
-
-//	TaskHandle_t xHandleBluetooth= NULL;
-//  	int paramBluetooth = 2;
-// 	xTaskCreate( thread_Bluetooth, "THREAD_BLUETOOTH", STACK_SIZE, &paramBluetooth, tskIDLE_PRIORITY, &xHandleBluetooth );
-// 	configASSERT( xHandleBluetooth );
 
 //	TaskHandle_t xHandleSensors= NULL;
 //  	int paramSensors = 2;
