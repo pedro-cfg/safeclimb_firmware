@@ -12,7 +12,7 @@
 
 Battery::Battery()
 {
-	ESP_ERROR_CHECK(adc1_config_width(ADC_WIDTH_BIT_DEFAULT));
+	ESP_ERROR_CHECK(adc1_config_width((adc_bits_width_t)ADC_WIDTH_BIT_DEFAULT));
     ESP_ERROR_CHECK(adc1_config_channel_atten(ADC1_EXAMPLE_CHAN0, ADC_EXAMPLE_ATTEN));
     gpio_set_direction(ENABLE_PIN, GPIO_MODE_OUTPUT);
 }

@@ -1,22 +1,4 @@
 dependencies:
-  dht11:
-    dependencies: []
-    source:
-      path: /home/pedro/ESP_IDE/safeclimb/components/dht11
-      type: local
-    version: '*'
-  esp_driver_gpio:
-    dependencies: []
-    source:
-      path: /home/pedro/Documentos/ESP_IDE/esp-idf-v5.3.1/components/esp_driver_gpio
-      type: local
-    version: '*'
-  esp_driver_spi:
-    dependencies: []
-    source:
-      path: /home/pedro/Documentos/ESP_IDE/esp-idf-v5.3.1/components/esp_driver_spi
-      type: local
-    version: '*'
   espressif/led_strip:
     component_hash: 28c6509a727ef74925b372ed404772aeedf11cce10b78c3f69b3c66799095e2d
     dependencies:
@@ -32,24 +14,6 @@ dependencies:
     source:
       type: idf
     version: 5.3.1
-  lora:
-    dependencies: []
-    source:
-      path: /home/pedro/ESP_IDE/safeclimb/components/lora
-      type: local
-    version: '*'
-  one-wire:
-    dependencies: []
-    source:
-      path: /home/pedro/ESP_IDE/safeclimb/components/one-wire
-      type: local
-    version: '*'
-  temperature:
-    dependencies: []
-    source:
-      path: /home/pedro/ESP_IDE/safeclimb/components/temperature
-      type: local
-    version: '*'
 direct_dependencies:
 - dht11
 - esp_driver_gpio

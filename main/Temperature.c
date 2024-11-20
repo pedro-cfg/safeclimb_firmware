@@ -32,7 +32,7 @@
 #include "owb_rmt.h"
 #include "ds18b20.h"
 
-#define GPIO_DS18B20_0       4
+#define GPIO_DS18B20_0       21
 #define MAX_DEVICES          (8)
 #define DS18B20_RESOLUTION   (DS18B20_RESOLUTION_12_BIT)
 #define SAMPLE_PERIOD        (1000)   // milliseconds
@@ -173,38 +173,38 @@
     {
         TickType_t last_wake_time = xTaskGetTickCount();
 
-        while (1)
+       
+        ds18b20_convert_all(owb);
+
+        // In this application all devices use the same resolution,
+        // so use the first device to determine the delay
+        ds18b20_wait_for_conversion(devices[0]);
+
+        // Read the results immediately after conversion otherwise it may fail
+        // (using printf before reading may take too long)
+        float readings[MAX_DEVICES] = { 0 };
+        DS18B20_ERROR errors[MAX_DEVICES] = { 0 };
+
+        for (int i = 0; i < num_devices; ++i)
         {
-            ds18b20_convert_all(owb);
-
-            // In this application all devices use the same resolution,
-            // so use the first device to determine the delay
-            ds18b20_wait_for_conversion(devices[0]);
-
-            // Read the results immediately after conversion otherwise it may fail
-            // (using printf before reading may take too long)
-            float readings[MAX_DEVICES] = { 0 };
-            DS18B20_ERROR errors[MAX_DEVICES] = { 0 };
-
-            for (int i = 0; i < num_devices; ++i)
-            {
-                errors[i] = ds18b20_read_temp(devices[i], &readings[i]);
-            }
-
-            // Print results in a separate loop, after all have been read
-            printf("\nTemperature readings (degrees C): sample %d\n", ++sample_count);
-            for (int i = 0; i < num_devices; ++i)
-            {
-                if (errors[i] != DS18B20_OK)
-                {
-                    ++errors_count[i];
-                }
-
-                printf("  %d: %.1f    %d errors\n", i, readings[i], errors_count[i]);
-            }
-
-            vTaskDelayUntil(&last_wake_time, SAMPLE_PERIOD / portTICK_PERIOD_MS);
+            errors[i] = ds18b20_read_temp(devices[i], &readings[i]);
         }
+
+        // Print results in a separate loop, after all have been read
+        printf("\nTemperature readings (degrees C): sample %d\n", ++sample_count);
+        for (int i = 0; i < num_devices; ++i)
+        {
+            if (errors[i] != DS18B20_OK)
+            {
+                ++errors_count[i];
+            }
+
+            printf("  %d: %.1f    %d errors\n", i, readings[i], errors_count[i]);
+        }
+     
+
+        vTaskDelayUntil(&last_wake_time, SAMPLE_PERIOD / portTICK_PERIOD_MS);
+        
     }
     else
     {
@@ -218,8 +218,8 @@
     }
     owb_uninitialize(owb);
 
-    printf("Restarting now.\n");
-    fflush(stdout);
-    vTaskDelay(1000 / portTICK_PERIOD_MS);
-    esp_restart();
+//    printf("Restarting now.\n");
+//    fflush(stdout);
+//    vTaskDelay(1000 / portTICK_PERIOD_MS);
+//    esp_restart();
 }

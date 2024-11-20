@@ -24,13 +24,19 @@
 #include "LoraManager.h"
 #include "Wind.h"
 #include "Battery.h"
+#include "RainDrop.h"
+#include "Soil.h"
 
-#define CONFIG_DHT11_PIN GPIO_NUM_4
+
+#define CONFIG_DHT11_PIN GPIO_NUM_17
 #define CONFIG_CONNECTION_TIMEOUT 5
 
 BluetoothManager btManager;
 LoraManager loraManager;
 Battery battery;
+RainDrop rain_sensor;
+Soil soil;
+Wind wind;
 uint8_t buf[256];
 
 bool main_tower = MAIN_TOWER;
@@ -141,13 +147,13 @@ void thread_Bluetooth(void *pvParameters)
 
 void thread_sensors(void *pvParameters)
 {
-//	printf("Sensors ON!\n");
+	printf("LAPOOOOOOOOOOOOOOOOO ON!\n");
 //	while(1) {
 //		temperature();
 //	} 
 
-//    dht11_t dht11_sensor;
-//    dht11_sensor.dht11_pin = CONFIG_DHT11_PIN;
+      dht11_t dht11_sensor;
+      dht11_sensor.dht11_pin = CONFIG_DHT11_PIN;
 //
 //    // Read data
 //    while(1)
@@ -161,13 +167,28 @@ void thread_sensors(void *pvParameters)
 //    } 
 
 	while(1){
-		//wind_sensor();
-//		int voltage = battery.measure();
-//		int charge = (voltage-540)/0.4;
-//		if(charge > 100) charge = 100;
-//		else if(charge < 0) charge = 0;
-//		printf("Voltage: %d, charge = %d%%\n", voltage, charge);
-//		vTaskDelay(1980/portTICK_PERIOD_MS);
+		printf("DTH11 sensor:\n");
+		if(!dht11_read(&dht11_sensor, CONFIG_CONNECTION_TIMEOUT))
+		{  
+		printf("[Temperature]> %.2f \n",dht11_sensor.temperature);
+		printf("[Humidity]> %.2f \n\n\n",dht11_sensor.humidity);
+		}
+		vTaskDelay(2000/portTICK_PERIOD_MS);
+		printf("Wind sensor:\n");
+		int voltage = wind.measure();
+		printf("Voltage: %d\n\n\n", voltage);
+		vTaskDelay(1980/portTICK_PERIOD_MS);
+		printf("Rain_sensor read...\n");
+		voltage = rain_sensor.measure();
+		printf("Voltage: %d \n\n\n", voltage);
+		vTaskDelay(1980/portTICK_PERIOD_MS);
+		printf("Soil_sensor read...\n");
+		voltage = soil.measure();
+		printf("Voltage: %d \n\n\n\n", voltage);
+		vTaskDelay(1980/portTICK_PERIOD_MS);
+		printf("Temperature sensor:\n");
+		temperature();
+		printf("\n\n\n");
 	}
 }
 
@@ -182,19 +203,19 @@ extern "C" void app_main()
     
     //btManager.turnOn();
 		
-	TaskHandle_t xHandleLoRa = NULL;
-    int paramLoRa = 2;
-    xTaskCreate( thread_LoRa, "THREAD_LORA", STACK_SIZE, &paramLoRa, tskIDLE_PRIORITY, &xHandleLoRa );
-    configASSERT( xHandleLoRa );
+//	TaskHandle_t xHandleLoRa = NULL;
+//    int paramLoRa = 2;
+//    xTaskCreate( thread_LoRa, "THREAD_LORA", STACK_SIZE, &paramLoRa, tskIDLE_PRIORITY, &xHandleLoRa );
+//    configASSERT( xHandleLoRa );
 
 //	TaskHandle_t xHandleBluetooth= NULL;
 //  	int paramBluetooth = 2;
 // 	xTaskCreate( thread_Bluetooth, "THREAD_BLUETOOTH", STACK_SIZE, &paramBluetooth, tskIDLE_PRIORITY, &xHandleBluetooth );
 // 	configASSERT( xHandleBluetooth );
 
-//	TaskHandle_t xHandleSensors= NULL;
-//  	int paramSensors = 2;
-// 	xTaskCreate( thread_sensors, "THREAD_SENSORS", STACK_SIZE, &paramSensors, tskIDLE_PRIORITY, &xHandleSensors );
-// 	configASSERT( xHandleSensors );
+	TaskHandle_t xHandleSensors= NULL;
+  	int paramSensors = 2;
+	xTaskCreate( thread_sensors, "THREAD_SENSORS", STACK_SIZE, &paramSensors, tskIDLE_PRIORITY, &xHandleSensors );
+	configASSERT( xHandleSensors );
 
 }

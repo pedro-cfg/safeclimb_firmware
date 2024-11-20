@@ -1,16 +1,14 @@
 
+#ifndef WIND_H_
+#define WIND_H_
 
-#ifndef WIND_H 
-#define WIND_H  
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-void wind_sensor();
-
-#ifdef __cplusplus
-}
-#endif
+class Wind {
+private:
+	int adc_raw[1][10];
+public:
+	Wind();
+	~Wind();
+	int measure();
+};
 
 #endif

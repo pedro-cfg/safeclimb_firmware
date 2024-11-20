@@ -4,19 +4,19 @@
 cmake_minimum_required(VERSION 3.5)
 
 file(MAKE_DIRECTORY
-  "/home/pedro/Documentos/ESP_IDE/esp-idf-v5.3.1/components/bootloader/subproject"
-  "/home/pedro/ESP_IDE/safeclimb/build/bootloader"
-  "/home/pedro/ESP_IDE/safeclimb/build/bootloader-prefix"
-  "/home/pedro/ESP_IDE/safeclimb/build/bootloader-prefix/tmp"
-  "/home/pedro/ESP_IDE/safeclimb/build/bootloader-prefix/src/bootloader-stamp"
-  "/home/pedro/ESP_IDE/safeclimb/build/bootloader-prefix/src"
-  "/home/pedro/ESP_IDE/safeclimb/build/bootloader-prefix/src/bootloader-stamp"
+  "/home/caio/esp/esp-idf-v5.3.1/components/bootloader/subproject"
+  "/home/caio/workspace/safeclimb_firmware/build/bootloader"
+  "/home/caio/workspace/safeclimb_firmware/build/bootloader-prefix"
+  "/home/caio/workspace/safeclimb_firmware/build/bootloader-prefix/tmp"
+  "/home/caio/workspace/safeclimb_firmware/build/bootloader-prefix/src/bootloader-stamp"
+  "/home/caio/workspace/safeclimb_firmware/build/bootloader-prefix/src"
+  "/home/caio/workspace/safeclimb_firmware/build/bootloader-prefix/src/bootloader-stamp"
 )
 
 set(configSubDirs )
 foreach(subDir IN LISTS configSubDirs)
-    file(MAKE_DIRECTORY "/home/pedro/ESP_IDE/safeclimb/build/bootloader-prefix/src/bootloader-stamp/${subDir}")
+    file(MAKE_DIRECTORY "/home/caio/workspace/safeclimb_firmware/build/bootloader-prefix/src/bootloader-stamp/${subDir}")
 endforeach()
 if(cfgdir)
-  file(MAKE_DIRECTORY "/home/pedro/ESP_IDE/safeclimb/build/bootloader-prefix/src/bootloader-stamp${cfgdir}") # cfgdir has leading slash
+  file(MAKE_DIRECTORY "/home/caio/workspace/safeclimb_firmware/build/bootloader-prefix/src/bootloader-stamp${cfgdir}") # cfgdir has leading slash
 endif()
