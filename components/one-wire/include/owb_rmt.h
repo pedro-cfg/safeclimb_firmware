@@ -32,6 +32,7 @@
  */
 
 #pragma once
+#include "owb.h"
 #ifndef OWB_RMT_H
 #define OWB_RMT_H
 
@@ -66,7 +67,7 @@ typedef struct
  * @return OneWireBus *, pass this into the other OneWireBus public API functions
  */
 OneWireBus* owb_rmt_initialize(owb_rmt_driver_info * info, gpio_num_t gpio_num,
-                               rmt_channel_t tx_channel, rmt_channel_t rx_channel);
+                               rmt_channel_t_deprecated tx_channel, rmt_channel_t_deprecated rx_channel);
 
 #ifdef __cplusplus
 }

@@ -359,7 +359,7 @@ void LoraManager::consumeInfo()
 	}
 	else
 	{
-		printf("TEMPERATURE: %d\n", actualPackage.getTemperature());
+		printf("TEMPERATURE: %.1f\n", ((float)actualPackage.getTemperature())/10.0);
 		printf("AIR HUMIDITY: %d\n", actualPackage.getAirHumidity());
 		printf("SOIL HUMIDITY: %d\n", actualPackage.getSoilHumidity());
 		printf("WIND SPEED: %d\n", actualPackage.getWindSpeed());

@@ -1,5 +1,4 @@
 
-
 #ifndef TEMPERATURE_H 
 #define TEMPERATURE_H  
 
@@ -7,7 +6,7 @@
 extern "C" {
 #endif
 
-void temperature();
+int temperature();
 
 #ifdef __cplusplus
 }

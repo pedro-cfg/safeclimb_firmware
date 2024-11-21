@@ -32,13 +32,14 @@
 #include "owb_rmt.h"
 #include "ds18b20.h"
 
-#define GPIO_DS18B20_0       4
+#define GPIO_DS18B20_0       21
 #define MAX_DEVICES          (8)
 #define DS18B20_RESOLUTION   (DS18B20_RESOLUTION_12_BIT)
 #define SAMPLE_PERIOD        (1000)   // milliseconds
 
- void temperature()
+int temperature()
 {
+	int temp = 0;
     // Override global log level
     esp_log_level_set("*", ESP_LOG_INFO);
 
@@ -47,7 +48,7 @@
     //esp_log_level_set("ds18b20", ESP_LOG_DEBUG);
 
     // Stable readings require a brief period before communication
-    vTaskDelay(2000.0 / portTICK_PERIOD_MS);
+    vTaskDelay(2000 / portTICK_PERIOD_MS);
 
     // Create a 1-Wire bus, using the RMT timeslot driver
     OneWireBus * owb;
@@ -56,7 +57,7 @@
     owb_use_crc(owb, true);  // enable CRC check for ROM code
 
     // Find all connected devices
-    printf("Find devices:\n");
+    //printf("Find devices:\n");
     OneWireBus_ROMCode device_rom_codes[MAX_DEVICES] = {0};
     int num_devices = 0;
     OneWireBus_SearchState search_state = {0};
@@ -66,12 +67,12 @@
     {
         char rom_code_s[17];
         owb_string_from_rom_code(search_state.rom_code, rom_code_s, sizeof(rom_code_s));
-        printf("  %d : %s\n", num_devices, rom_code_s);
+        //printf("  %d : %s\n", num_devices, rom_code_s);
         device_rom_codes[num_devices] = search_state.rom_code;
         ++num_devices;
         owb_search_next(owb, &search_state, &found);
     }
-    printf("Found %d device%s\n", num_devices, num_devices == 1 ? "" : "s");
+    //printf("Found %d device%s\n", num_devices, num_devices == 1 ? "" : "s");
 
     // In this example, if a single device is present, then the ROM code is probably
     // not very interesting, so just print it out. If there are multiple devices,
@@ -86,11 +87,11 @@
         {
             char rom_code_s[OWB_ROM_CODE_STRING_LENGTH];
             owb_string_from_rom_code(rom_code, rom_code_s, sizeof(rom_code_s));
-            printf("Single device %s present\n", rom_code_s);
+            //printf("Single device %s present\n", rom_code_s);
         }
         else
         {
-            printf("An error occurred reading ROM code: %d", status);
+            //printf("An error occurred reading ROM code: %d", status);
         }
     }
     else
@@ -109,11 +110,11 @@
         owb_status search_status = owb_verify_rom(owb, known_device, &is_present);
         if (search_status == OWB_STATUS_OK)
         {
-            printf("Device %s is %s\n", rom_code_s, is_present ? "present" : "not present");
+            //printf("Device %s is %s\n", rom_code_s, is_present ? "present" : "not present");
         }
         else
         {
-            printf("An error occurred searching for known device: %d", search_status);
+            //printf("An error occurred searching for known device: %d", search_status);
         }
     }
 
@@ -126,7 +127,7 @@
 
         if (num_devices == 1)
         {
-            printf("Single device optimisations enabled\n");
+            //printf("Single device optimisations enabled\n");
             ds18b20_init_solo(ds18b20_info, owb);          // only one device on bus
         }
         else
@@ -153,7 +154,7 @@
     bool parasitic_power = false;
     ds18b20_check_for_parasite_power(owb, &parasitic_power);
     if (parasitic_power) {
-        printf("Parasitic-powered devices detected");
+        //printf("Parasitic-powered devices detected");
     }
 
     // In parasitic-power mode, devices cannot indicate when conversions are complete,
@@ -168,43 +169,46 @@
 
     // Read temperatures more efficiently by starting conversions on all devices at the same time
     int errors_count[MAX_DEVICES] = {0};
-    int sample_count = 0;
     if (num_devices > 0)
     {
         TickType_t last_wake_time = xTaskGetTickCount();
 
-        while (1)
+       
+        ds18b20_convert_all(owb);
+
+        // In this application all devices use the same resolution,
+        // so use the first device to determine the delay
+        ds18b20_wait_for_conversion(devices[0]);
+
+        // Read the results immediately after conversion otherwise it may fail
+        // (using printf before reading may take too long)
+        float readings[MAX_DEVICES] = { 0 };
+        DS18B20_ERROR errors[MAX_DEVICES] = { 0 };
+
+        for (int i = 0; i < num_devices; ++i)
         {
-            ds18b20_convert_all(owb);
-
-            // In this application all devices use the same resolution,
-            // so use the first device to determine the delay
-            ds18b20_wait_for_conversion(devices[0]);
-
-            // Read the results immediately after conversion otherwise it may fail
-            // (using printf before reading may take too long)
-            float readings[MAX_DEVICES] = { 0 };
-            DS18B20_ERROR errors[MAX_DEVICES] = { 0 };
-
-            for (int i = 0; i < num_devices; ++i)
-            {
-                errors[i] = ds18b20_read_temp(devices[i], &readings[i]);
-            }
-
-            // Print results in a separate loop, after all have been read
-            printf("\nTemperature readings (degrees C): sample %d\n", ++sample_count);
-            for (int i = 0; i < num_devices; ++i)
-            {
-                if (errors[i] != DS18B20_OK)
-                {
-                    ++errors_count[i];
-                }
-
-                printf("  %d: %.1f    %d errors\n", i, readings[i], errors_count[i]);
-            }
-
-            vTaskDelayUntil(&last_wake_time, SAMPLE_PERIOD / portTICK_PERIOD_MS);
+            errors[i] = ds18b20_read_temp(devices[i], &readings[i]);
         }
+
+		
+
+        // Print results in a separate loop, after all have been read
+        //printf("\nTemperature readings (degrees C):\n");
+        for (int i = 0; i < num_devices; ++i)
+        {
+            if (errors[i] != DS18B20_OK)
+            {
+                ++errors_count[i];
+            }
+            
+
+            //printf("  %d: %.1f    %d errors\n", i, readings[i], errors_count[i]);
+            temp = (int)readings[i]*10;
+        }
+     
+
+        vTaskDelayUntil(&last_wake_time, SAMPLE_PERIOD / portTICK_PERIOD_MS);
+        
     }
     else
     {
@@ -218,8 +222,9 @@
     }
     owb_uninitialize(owb);
 
-    printf("Restarting now.\n");
-    fflush(stdout);
-    vTaskDelay(1000 / portTICK_PERIOD_MS);
-    esp_restart();
+//    printf("Restarting now.\n");
+//    fflush(stdout);
+//    vTaskDelay(1000 / portTICK_PERIOD_MS);
+//    esp_restart();
+	return temp;
 }
