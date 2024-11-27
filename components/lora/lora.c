@@ -629,7 +629,7 @@ lora_send_packet(uint8_t *buf, int size)
    }
    if (loop == 10) {
       __send_packet_lost++;
-      ESP_LOGE(TAG, "lora_send_packet Fail");
+      //ESP_LOGE(TAG, "lora_send_packet Fail");
    }
    lora_write_reg(REG_IRQ_FLAGS, IRQ_TX_DONE_MASK);
 }

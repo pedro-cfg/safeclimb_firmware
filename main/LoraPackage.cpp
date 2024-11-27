@@ -104,29 +104,36 @@ void LoraPackage::decapsulate()
 
 void LoraPackage::setPackage(uint8_t* pck, int size)
 {
-	for(int i = 0; i < size; i++)
-		package[i] = pck[i];	
-	package_size = size;
-	decapsulate();
+	if(size < 1000 && size > 0)
+	{
+		for(int i = 0; i < size; i++)
+			package[i] = pck[i];	
+		package_size = size;
+		decapsulate();
+	}
+	
 }
 
 void LoraPackage::setPayload(uint8_t* pay, int size, int destiny, int sender, bool ka, bool info, bool txt, int temp, int ah,int sh,int ws,int rn)
 {
-	for(int i = 0; i < size; i++)
-		payload[i] = pay[i];	
-	payload_size = size;
-	destiny_number = destiny;
-	sender_number = sender;
-	original_number = sender;
-	isText = txt;
-	isInfo = info;
-	iskeepAlive = ka;
-	temperature = temp;
-	air_humidity = ah;
-	soil_humidity = sh;
-	wind_speed = ws;
-	rain = rn;
-	encapsulate();
+	if(size < 1000 && size > 0)
+	{
+		for(int i = 0; i < size; i++)
+			payload[i] = pay[i];	
+		payload_size = size;
+		destiny_number = destiny;
+		sender_number = sender;
+		original_number = sender;
+		isText = txt;
+		isInfo = info;
+		iskeepAlive = ka;
+		temperature = temp;
+		air_humidity = ah;
+		soil_humidity = sh;
+		wind_speed = ws;
+		rain = rn;
+		encapsulate();
+	}
 }
 
 uint8_t* LoraPackage::getPackage()

@@ -17,6 +17,7 @@ if("${CONFIG}" STREQUAL "" OR "${CONFIG}" STREQUAL "")
   "ldgen_libraries"
   "ldgen_libraries.in"
   "project_elf_src_esp32.c"
+  "root_cert_auth.crt.S"
   "safeclimb.bin"
   "safeclimb.map"
   "x509_crt_bundle.S"

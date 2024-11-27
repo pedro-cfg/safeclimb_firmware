@@ -544,6 +544,66 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
+  include("/home/pedro/ESP_IDE/safeclimb/build/esp-idf/qrcode/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("/home/pedro/ESP_IDE/safeclimb/build/esp-idf/coreMQTT/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("/home/pedro/ESP_IDE/safeclimb/build/esp-idf/coreMQTT-Agent/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("/home/pedro/ESP_IDE/safeclimb/build/esp-idf/corePKCS11/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("/home/pedro/ESP_IDE/safeclimb/build/esp-idf/coreJSON/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("/home/pedro/ESP_IDE/safeclimb/build/esp-idf/backoffAlgorithm/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("/home/pedro/ESP_IDE/safeclimb/build/esp-idf/espressif__esp_secure_cert_mgr/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("/home/pedro/ESP_IDE/safeclimb/build/esp-idf/Jobs-for-AWS-IoT-embedded-sdk/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("/home/pedro/ESP_IDE/safeclimb/build/esp-idf/espressif__cbor/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("/home/pedro/ESP_IDE/safeclimb/build/esp-idf/aws-iot-core-mqtt-file-streams-embedded-c/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("/home/pedro/ESP_IDE/safeclimb/build/esp-idf/coreHTTP/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("/home/pedro/ESP_IDE/safeclimb/build/esp-idf/FreeRTOS-Libraries-Integration-Tests/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
   include("/home/pedro/ESP_IDE/safeclimb/build/esp-idf/dht11/cmake_install.cmake")
 endif()
 
@@ -565,5 +625,20 @@ endif()
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
   include("/home/pedro/ESP_IDE/safeclimb/build/esp-idf/main/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("/home/pedro/ESP_IDE/safeclimb/build/esp-idf/Device-Defender-for-AWS-IoT-embedded-sdk/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("/home/pedro/ESP_IDE/safeclimb/build/esp-idf/Device-Shadow-for-AWS-IoT-embedded-sdk/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("/home/pedro/ESP_IDE/safeclimb/build/esp-idf/Fleet-Provisioning-for-AWS-IoT-embedded-sdk/cmake_install.cmake")
 endif()
 

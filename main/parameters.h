@@ -1,4 +1,4 @@
-#define STACK_SIZE 200*32
+#define STACK_SIZE 300*32
 #define SLEEP_TIME 300
 #define BUTTON_GPIO GPIO_NUM_2
 

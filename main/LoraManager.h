@@ -11,6 +11,7 @@
 #include "esp_sleep.h"
 #include "parameters.h"
 #include "LoraPackage.h"
+#include "WIFI.h"
 
 class LoraManager {
 private:
@@ -35,6 +36,7 @@ private:
 	bool transmitting;
 	int bluetooth_tower;
 	bool data_bluetooth;
+	WIFI* wifi;
 	
 	LoraPackage actualPackage;
 	LoraPackage receivedPackage;
@@ -55,7 +57,7 @@ private:
 public:
     LoraManager();
     ~LoraManager();
-    void init();
+    void init(WIFI* w);
     void exec();
     void setInitialTime(struct timeval time);
     void sendPackage(uint8_t* pck, int size, int destiny, bool txt = true, bool ka = false, int temp = 0, int ah = 0,int sh = 0,int ws = 0,int rn = 0);

@@ -12,4 +12,14 @@ dependencies:
     path: ${IDF_PATH}/components/esp_driver_spi
   esp_driver_gpio:
     path: ${IDF_PATH}/components/esp_driver_gpio
+  mbedtls:
+    path: ${IDF_PATH}/components/mbedtls
+  esp_adc:
+    path: ${IDF_PATH}/components/esp_adc
+  espressif/esp_secure_cert_mgr: "^2.0.8"
+  espressif/cbor:
+    version: "^0.6.0"
+    rules:
+      - if: "idf_version >=5.0"
+  
 

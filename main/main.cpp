@@ -7,6 +7,7 @@
 #include <string>
 
 #include "esp_private/esp_clk.h"
+#include "esp_task_wdt.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "esp_sleep.h"
@@ -33,10 +34,12 @@
 BluetoothManager btManager;
 LoraManager loraManager;
 ADC adc;
+WIFI wifi;
 uint8_t buf[256];
 
 TaskHandle_t xHandleBluetooth= NULL;
 TaskHandle_t xHandleLoRa = NULL;
+TaskHandle_t xHandleWifi = NULL;
 
 bool main_tower = MAIN_TOWER;
 bool server_tower = SERVER_TOWER;
@@ -79,14 +82,14 @@ void thread_LoRa(void *pvParameters)
 	dht11_t dht11_sensor;
 	dht11_sensor.dht11_pin = CONFIG_DHT11_PIN;
 	
-	loraManager.init();
+	loraManager.init(&wifi);
 	struct timeval now;
     gettimeofday(&now, NULL);
     
 	if(main_tower && !bluetooth_comm)
     {
 		temp = temperature();
-		printf("Temperature: %.1f C \n", (float)temp/10.0);
+		printf("\n\nTemperature: %.1f C \n", (float)temp/10.0);
 		vTaskDelay(100/portTICK_PERIOD_MS);
 		printf("\nDTH11 sensor:\n");
 		if(!dht11_read(&dht11_sensor, CONFIG_CONNECTION_TIMEOUT))
@@ -113,7 +116,7 @@ void thread_LoRa(void *pvParameters)
 		batt = adc.measure_batt();
 		printf("Voltage: %.3f V \n\n", (float)batt/1000.0);
 		vTaskDelay(100/portTICK_PERIOD_MS);
-		int send_len = sprintf((char *)buf,"MEASUREMENT");
+		int send_len = sprintf((char *)buf,"BATT %d",batt);
 		vTaskDelay(500 / portTICK_PERIOD_MS);
 		loraManager.sendPackage(buf, send_len, 0,false,false,temp,air_humidity,soil_humidity,wind_speed,rain);
 //		loraManager.sendPackage(buf, send_len, 0,true);
@@ -127,11 +130,10 @@ void thread_LoRa(void *pvParameters)
     loraManager.setInitialTime(now);
     
 	while(1) {
+		vTaskDelay(1);
 		if(loraManager.teste)
 		{
 			loraManager.teste = false;
-			vTaskDelay(10000 / portTICK_PERIOD_MS);
-			loraManager.sendPackage((uint8_t*)"Deu certo!", 11,loraManager.getBluetoothTower(),true,true);
 		}
 		
 		loraManager.exec();
@@ -164,11 +166,26 @@ void thread_Bluetooth(void *pvParameters)
 	
 }
 
+void thread_Wifi(void *pvParameters)
+{
+	wifi.init();
+	while(1) {
+//		wifi.MQTTpublish(20,50,100,200,300);
+		vTaskDelay(10000 / portTICK_PERIOD_MS); 
+	} 
+	
+}
+
 extern "C" void app_main()
 {	    
     //Configure DeepSleep
     deep_sleep_register_rtc_timer_wakeup();
     deep_sleep_register_ext0_wakeup();
+    
+    if(SERVER_TOWER)
+    {
+		wifi.init();
+	}
 
 	gpio_pad_select_gpio((gpio_num_t)BUTTON_PIN);
     gpio_set_direction((gpio_num_t)BUTTON_PIN, GPIO_MODE_INPUT);
@@ -181,7 +198,7 @@ extern "C" void app_main()
     
     //btManager.turnOn();
 		
-  	int paramBluetooth = 2;
+  	int paramBluetooth = 1;
  	xTaskCreate( thread_Bluetooth, "THREAD_BLUETOOTH", STACK_SIZE, &paramBluetooth, tskIDLE_PRIORITY, &xHandleBluetooth );
  	configASSERT( xHandleBluetooth );
  	
@@ -194,5 +211,9 @@ extern "C" void app_main()
 	int paramLoRa = 2;
     xTaskCreate( thread_LoRa, "THREAD_LORA", STACK_SIZE, &paramLoRa, tskIDLE_PRIORITY, &xHandleLoRa );
     configASSERT( xHandleLoRa );
+    
+//    int paramWifi = 3;
+//    xTaskCreate( thread_Wifi, "THREAD_WIFI", STACK_SIZE, &paramWifi, tskIDLE_PRIORITY, &xHandleWifi );
+//    configASSERT( xHandleWifi );
 
 }

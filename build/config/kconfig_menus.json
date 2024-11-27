@@ -5138,6 +5138,905 @@
     {
         "children": [
             {
+                "children": [],
+                "depends_on": null,
+                "help": "Show the QR code for provisioning.",
+                "id": "APP_WIFI_PROV_SHOW_QR",
+                "name": "APP_WIFI_PROV_SHOW_QR",
+                "range": null,
+                "title": "Show provisioning QR code",
+                "type": "bool"
+            },
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "depends_on": "<choice APP_WIFI_PROV_TRANSPORT>",
+                        "help": null,
+                        "id": "APP_WIFI_PROV_TRANSPORT_SOFTAP",
+                        "name": "APP_WIFI_PROV_TRANSPORT_SOFTAP",
+                        "range": null,
+                        "title": "Soft AP",
+                        "type": "bool"
+                    },
+                    {
+                        "children": [],
+                        "depends_on": "<choice APP_WIFI_PROV_TRANSPORT>",
+                        "help": null,
+                        "id": "APP_WIFI_PROV_TRANSPORT_BLE",
+                        "name": "APP_WIFI_PROV_TRANSPORT_BLE",
+                        "range": null,
+                        "title": "BLE",
+                        "type": "bool"
+                    }
+                ],
+                "depends_on": null,
+                "help": "Wi-Fi provisioning component offers both, SoftAP and BLE transports. Choose any one.",
+                "id": "featured-freertos-iot-integration-provisioning-transport-method",
+                "name": "APP_WIFI_PROV_TRANSPORT",
+                "title": "Provisioning Transport method",
+                "type": "choice"
+            },
+            {
+                "children": [],
+                "depends_on": null,
+                "help": null,
+                "id": "APP_WIFI_PROV_TRANSPORT",
+                "name": "APP_WIFI_PROV_TRANSPORT",
+                "range": null,
+                "title": null,
+                "type": "int"
+            },
+            {
+                "children": [],
+                "depends_on": null,
+                "help": "Enable to run qualification test. Use configurations in test_execution_config.h and test_param_config.h.\nDisable to demo. Use configurations below (in sdkconfig).",
+                "id": "GRI_RUN_QUALIFICATION_TEST",
+                "name": "GRI_RUN_QUALIFICATION_TEST",
+                "range": null,
+                "title": "Run qualification test.",
+                "type": "bool"
+            },
+            {
+                "children": [
+                    {
+                        "children": [
+                            {
+                                "children": [],
+                                "depends_on": null,
+                                "help": null,
+                                "id": "GRI_DEVICE_ADVISOR_TEST_ENABLED",
+                                "name": "GRI_DEVICE_ADVISOR_TEST_ENABLED",
+                                "range": null,
+                                "title": "Device Advisor Test.",
+                                "type": "bool"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": null,
+                                "help": null,
+                                "id": "GRI_MQTT_TEST_ENABLED",
+                                "name": "GRI_MQTT_TEST_ENABLED",
+                                "range": null,
+                                "title": "MQTT Test.",
+                                "type": "bool"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": null,
+                                "help": null,
+                                "id": "GRI_TRANSPORT_INTERFACE_TEST_ENABLED",
+                                "name": "GRI_TRANSPORT_INTERFACE_TEST_ENABLED",
+                                "range": null,
+                                "title": "Transport Interface Test.",
+                                "type": "bool"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": null,
+                                "help": null,
+                                "id": "GRI_CORE_PKCS11_TEST_ENABLED",
+                                "name": "GRI_CORE_PKCS11_TEST_ENABLED",
+                                "range": null,
+                                "title": "CorePKCS#11 Test.",
+                                "type": "bool"
+                            }
+                        ],
+                        "depends_on": null,
+                        "id": "featured-freertos-iot-integration-qualification-test-configurations-qualification-execution-test-configurations",
+                        "title": "Qualification Execution Test Configurations",
+                        "type": "menu"
+                    },
+                    {
+                        "children": [
+                            {
+                                "children": [],
+                                "depends_on": null,
+                                "help": null,
+                                "id": "GRI_QUALIFICATION_FORCE_GENERATE_NEW_KEY_PAIR",
+                                "name": "GRI_QUALIFICATION_FORCE_GENERATE_NEW_KEY_PAIR",
+                                "range": null,
+                                "title": "Generate a key pair.",
+                                "type": "bool"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": null,
+                                "help": "MQTT Broker for Device Advisor Test/MQTT Test/OTA end-to-end Test.",
+                                "id": "GRI_QUALIFICATION_MQTT_ENDPOINT",
+                                "name": "GRI_QUALIFICATION_MQTT_ENDPOINT",
+                                "range": null,
+                                "title": "Endpoint for MQTT Broker to use",
+                                "type": "string"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": null,
+                                "help": null,
+                                "id": "GRI_QUALIFICATION_MQTT_PORT",
+                                "name": "GRI_QUALIFICATION_MQTT_PORT",
+                                "range": null,
+                                "title": "Port for MQTT Broker to use",
+                                "type": "int"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": null,
+                                "help": null,
+                                "id": "GRI_QUALIFICATION_CLIENT_IDENTIFIER",
+                                "name": "GRI_QUALIFICATION_CLIENT_IDENTIFIER",
+                                "range": null,
+                                "title": "Client Identifier for MQTT Test",
+                                "type": "string"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": null,
+                                "help": null,
+                                "id": "GRI_QUALIFICATION_NETWORK_BUFFER_SIZE",
+                                "name": "GRI_QUALIFICATION_NETWORK_BUFFER_SIZE",
+                                "range": null,
+                                "title": "Network Buffer Size for MQTT Test",
+                                "type": "int"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": null,
+                                "help": null,
+                                "id": "GRI_QUALIFICATION_PROCESS_LOOP_TIMEOUT_MS",
+                                "name": "GRI_QUALIFICATION_PROCESS_LOOP_TIMEOUT_MS",
+                                "range": null,
+                                "title": "Timeout to run MQTT process loop for MQTT Test",
+                                "type": "int"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": null,
+                                "help": "Domain Name or IP address for Transport Interface Test.",
+                                "id": "GRI_QUALIFICATION_ECHO_SERVER",
+                                "name": "GRI_QUALIFICATION_ECHO_SERVER",
+                                "range": null,
+                                "title": "Echo Server Domain Name/IP for Transport Interface Test",
+                                "type": "string"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": null,
+                                "help": null,
+                                "id": "GRI_QUALIFICATION_ECHO_SERVER_PORT",
+                                "name": "GRI_QUALIFICATION_ECHO_SERVER_PORT",
+                                "range": null,
+                                "title": "Port for Echo Server to use",
+                                "type": "int"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": null,
+                                "help": null,
+                                "id": "GRI_QUALIFICATION_THING_NAME",
+                                "name": "GRI_QUALIFICATION_THING_NAME",
+                                "range": null,
+                                "title": "Thing Name for Device Advisor Test/OTA end-to-end Test",
+                                "type": "string"
+                            }
+                        ],
+                        "depends_on": null,
+                        "id": "featured-freertos-iot-integration-qualification-test-configurations-qualification-parameter-configurations",
+                        "title": "Qualification Parameter Configurations",
+                        "type": "menu"
+                    },
+                    {
+                        "children": [
+                            {
+                                "children": [],
+                                "depends_on": null,
+                                "help": "Size of statically allocated buffers for holding topic names and payloads.",
+                                "id": "GRI_SUB_PUB_UNSUB_DEMO_STRING_BUFFER_LENGTH",
+                                "name": "GRI_SUB_PUB_UNSUB_DEMO_STRING_BUFFER_LENGTH",
+                                "range": null,
+                                "title": "Topic name and payload buffer length",
+                                "type": "int"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": null,
+                                "help": "Delay for each task between subscription, publish, unsubscription loops.",
+                                "id": "GRI_SUB_PUB_UNSUB_DEMO_DELAY_BETWEEN_SUB_PUB_UNSUB_LOOPS_MS",
+                                "name": "GRI_SUB_PUB_UNSUB_DEMO_DELAY_BETWEEN_SUB_PUB_UNSUB_LOOPS_MS",
+                                "range": null,
+                                "title": "Delay between sub pub unsub loops in milliseconds",
+                                "type": "int"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": null,
+                                "help": "The maximum amount of time in milliseconds to wait for the commands to be posted to the MQTT agent should the MQTT agent's command queue be full. Tasks wait in the Blocked state, so don't use any CPU time.",
+                                "id": "GRI_SUB_PUB_UNSUB_DEMO_MAX_COMMAND_SEND_BLOCK_TIME_MS",
+                                "name": "GRI_SUB_PUB_UNSUB_DEMO_MAX_COMMAND_SEND_BLOCK_TIME_MS",
+                                "range": null,
+                                "title": "coreMQTT-Agent command post block time in milliseconds.",
+                                "type": "int"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": null,
+                                "help": "The QoS level of MQTT messages sent by this demo. This must be 0 or 1 if using AWS as AWS only supports levels 0 or 1. If using another MQTT broker, that supports QoS level 2, this can be set to 2.",
+                                "id": "GRI_SUB_PUB_UNSUB_DEMO_QOS_LEVEL",
+                                "name": "GRI_SUB_PUB_UNSUB_DEMO_QOS_LEVEL",
+                                "range": [
+                                    0,
+                                    2
+                                ],
+                                "title": "QoS level of MQTT operations",
+                                "type": "int"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": null,
+                                "help": "The number of SubPubUnsub tasks to create for this demo.",
+                                "id": "GRI_SUB_PUB_UNSUB_DEMO_NUM_TASKS_TO_CREATE",
+                                "name": "GRI_SUB_PUB_UNSUB_DEMO_NUM_TASKS_TO_CREATE",
+                                "range": null,
+                                "title": "Number of SubPubUnsub tasks to create",
+                                "type": "int"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": null,
+                                "help": "The task priority of each of the SubPubUnsub tasks.",
+                                "id": "GRI_SUB_PUB_UNSUB_DEMO_TASK_PRIORITY",
+                                "name": "GRI_SUB_PUB_UNSUB_DEMO_TASK_PRIORITY",
+                                "range": null,
+                                "title": "SubPubUnsub task priority.",
+                                "type": "int"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": null,
+                                "help": "The task stack size for each of the SubPubUnsub tasks.",
+                                "id": "GRI_SUB_PUB_UNSUB_DEMO_TASK_STACK_SIZE",
+                                "name": "GRI_SUB_PUB_UNSUB_DEMO_TASK_STACK_SIZE",
+                                "range": null,
+                                "title": "SubPubUnsub task stack size.",
+                                "type": "int"
+                            }
+                        ],
+                        "depends_on": null,
+                        "id": "featured-freertos-iot-integration-qualification-test-configurations-sub-pub-unsub-demo-configurations",
+                        "title": "Sub pub unsub demo configurations",
+                        "type": "menu"
+                    },
+                    {
+                        "children": [
+                            {
+                                "children": [],
+                                "depends_on": null,
+                                "help": "The maximum size of the file paths used in the demo.",
+                                "id": "GRI_OTA_DEMO_MAX_FILE_PATH_SIZE",
+                                "name": "GRI_OTA_DEMO_MAX_FILE_PATH_SIZE",
+                                "range": null,
+                                "title": "Max file path size.",
+                                "type": "int"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": null,
+                                "help": "The maximum size of the stream name required for downloading update file from streaming service.",
+                                "id": "GRI_OTA_DEMO_MAX_STREAM_NAME_SIZE",
+                                "name": "GRI_OTA_DEMO_MAX_STREAM_NAME_SIZE",
+                                "range": null,
+                                "title": "Max stream name size.",
+                                "type": "int"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": null,
+                                "help": "The delay used in the OTA demo task to periodically output the OTA statistics like number of packets received, dropped, processed and queued per connection.",
+                                "id": "GRI_OTA_DEMO_TASK_DELAY_MS",
+                                "name": "GRI_OTA_DEMO_TASK_DELAY_MS",
+                                "range": null,
+                                "title": "OTA statistic output delay milliseconds.",
+                                "type": "int"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": null,
+                                "help": "The maximum time for which OTA demo waits for an MQTT operation to be complete. This involves receiving an acknowledgment for broker for SUBSCRIBE, UNSUBSCRIBE and non QOS0 publishes.",
+                                "id": "GRI_OTA_DEMO_MQTT_TIMEOUT_MS",
+                                "name": "GRI_OTA_DEMO_MQTT_TIMEOUT_MS",
+                                "range": null,
+                                "title": "MQTT operation timeout milliseconds.",
+                                "type": "int"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": null,
+                                "help": null,
+                                "id": "GRI_OTA_DEMO_AGENT_TASK_PRIORITY",
+                                "name": "GRI_OTA_DEMO_AGENT_TASK_PRIORITY",
+                                "range": null,
+                                "title": "OTA agent task priority.",
+                                "type": "int"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": null,
+                                "help": null,
+                                "id": "GRI_OTA_DEMO_AGENT_TASK_STACK_SIZE",
+                                "name": "GRI_OTA_DEMO_AGENT_TASK_STACK_SIZE",
+                                "range": null,
+                                "title": "OTA agent task stack size.",
+                                "type": "int"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": null,
+                                "help": null,
+                                "id": "GRI_OTA_DEMO_DEMO_TASK_PRIORITY",
+                                "name": "GRI_OTA_DEMO_DEMO_TASK_PRIORITY",
+                                "range": null,
+                                "title": "OTA demo task priority.",
+                                "type": "int"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": null,
+                                "help": null,
+                                "id": "GRI_OTA_DEMO_DEMO_TASK_STACK_SIZE",
+                                "name": "GRI_OTA_DEMO_DEMO_TASK_STACK_SIZE",
+                                "range": null,
+                                "title": "OTA demo task stack size.",
+                                "type": "int"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": null,
+                                "help": null,
+                                "id": "GRI_OTA_MAX_NUM_DATA_BUFFERS",
+                                "name": "GRI_OTA_MAX_NUM_DATA_BUFFERS",
+                                "range": null,
+                                "title": "OTA buffer number.",
+                                "type": "int"
+                            }
+                        ],
+                        "depends_on": null,
+                        "id": "featured-freertos-iot-integration-qualification-test-configurations-ota-demo-configurations",
+                        "title": "OTA demo configurations",
+                        "type": "menu"
+                    }
+                ],
+                "depends_on": null,
+                "id": "featured-freertos-iot-integration-qualification-test-configurations",
+                "title": "Qualification Test Configurations",
+                "type": "menu"
+            },
+            {
+                "children": [],
+                "depends_on": "!GRI_RUN_QUALIFICATION_TEST",
+                "help": null,
+                "id": "GRI_MQTT_ENDPOINT",
+                "name": "GRI_MQTT_ENDPOINT",
+                "range": null,
+                "title": "Endpoint for MQTT Broker to use",
+                "type": "string"
+            },
+            {
+                "children": [],
+                "depends_on": "!GRI_RUN_QUALIFICATION_TEST",
+                "help": null,
+                "id": "GRI_MQTT_PORT",
+                "name": "GRI_MQTT_PORT",
+                "range": null,
+                "title": "Port for MQTT Broker to use",
+                "type": "int"
+            },
+            {
+                "children": [],
+                "depends_on": "!GRI_RUN_QUALIFICATION_TEST",
+                "help": null,
+                "id": "GRI_THING_NAME",
+                "name": "GRI_THING_NAME",
+                "range": null,
+                "title": "Thing name",
+                "type": "string"
+            },
+            {
+                "children": [],
+                "depends_on": null,
+                "help": null,
+                "id": "GRI_OUTPUT_CERTS_KEYS",
+                "name": "GRI_OUTPUT_CERTS_KEYS",
+                "range": null,
+                "title": "Output provisioned certificates and keys.",
+                "type": "bool"
+            },
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "depends_on": null,
+                        "help": null,
+                        "id": "GRI_MQTT_AGENT_TASK_STACK_SIZE",
+                        "name": "GRI_MQTT_AGENT_TASK_STACK_SIZE",
+                        "range": null,
+                        "title": "coreMQTT-Agent task stack size",
+                        "type": "int"
+                    },
+                    {
+                        "children": [],
+                        "depends_on": null,
+                        "help": null,
+                        "id": "GRI_MQTT_AGENT_TASK_PRIORITY",
+                        "name": "GRI_MQTT_AGENT_TASK_PRIORITY",
+                        "range": null,
+                        "title": "coreMQTT-Agent task priority",
+                        "type": "int"
+                    },
+                    {
+                        "children": [],
+                        "depends_on": null,
+                        "help": null,
+                        "id": "GRI_CONNECTION_TASK_STACK_SIZE",
+                        "name": "GRI_CONNECTION_TASK_STACK_SIZE",
+                        "range": null,
+                        "title": "Connection handling task stack size",
+                        "type": "int"
+                    },
+                    {
+                        "children": [],
+                        "depends_on": null,
+                        "help": null,
+                        "id": "GRI_CONNECTION_TASK_PRIORITY",
+                        "name": "GRI_CONNECTION_TASK_PRIORITY",
+                        "range": null,
+                        "title": "Connection handling task priority",
+                        "type": "int"
+                    },
+                    {
+                        "children": [],
+                        "depends_on": null,
+                        "help": null,
+                        "id": "GRI_RETRY_MAX_BACKOFF_DELAY_MS",
+                        "name": "GRI_RETRY_MAX_BACKOFF_DELAY_MS",
+                        "range": null,
+                        "title": "Maximum backoff delay on connection retry in milliseconds",
+                        "type": "int"
+                    },
+                    {
+                        "children": [],
+                        "depends_on": null,
+                        "help": null,
+                        "id": "GRI_RETRY_BACKOFF_BASE_MS",
+                        "name": "GRI_RETRY_BACKOFF_BASE_MS",
+                        "range": null,
+                        "title": "Base back-off delay on connection retry in milliseconds",
+                        "type": "int"
+                    },
+                    {
+                        "children": [],
+                        "depends_on": null,
+                        "help": null,
+                        "id": "GRI_MQTT_AGENT_NETWORK_BUFFER_SIZE",
+                        "name": "GRI_MQTT_AGENT_NETWORK_BUFFER_SIZE",
+                        "range": null,
+                        "title": "coreMQTT-Agent network buffer size",
+                        "type": "int"
+                    },
+                    {
+                        "children": [],
+                        "depends_on": null,
+                        "help": null,
+                        "id": "GRI_MQTT_AGENT_COMMAND_QUEUE_LENGTH",
+                        "name": "GRI_MQTT_AGENT_COMMAND_QUEUE_LENGTH",
+                        "range": null,
+                        "title": "coreMQTT-Agent command queue length",
+                        "type": "int"
+                    },
+                    {
+                        "children": [],
+                        "depends_on": null,
+                        "help": "The maximum time interval in seconds which is allowed to elapsed between two Control Packets.",
+                        "id": "GRI_MQTT_AGENT_KEEP_ALIVE_INTERVAL_SECONDS",
+                        "name": "GRI_MQTT_AGENT_KEEP_ALIVE_INTERVAL_SECONDS",
+                        "range": null,
+                        "title": "coreMQTT-Agent keep alive interval in seconds",
+                        "type": "int"
+                    },
+                    {
+                        "children": [],
+                        "depends_on": null,
+                        "help": null,
+                        "id": "GRI_MQTT_AGENT_CONNACK_RECV_TIMEOUT_MS",
+                        "name": "GRI_MQTT_AGENT_CONNACK_RECV_TIMEOUT_MS",
+                        "range": null,
+                        "title": "Timeout for receiving CONNACK in milliseconds",
+                        "type": "int"
+                    }
+                ],
+                "depends_on": null,
+                "id": "featured-freertos-iot-integration-coremqtt-agent-manager-configurations",
+                "title": "coreMQTT-Agent Manager Configurations",
+                "type": "menu"
+            },
+            {
+                "children": [
+                    {
+                        "children": [
+                            {
+                                "children": [],
+                                "depends_on": "GRI_ENABLE_SUB_PUB_UNSUB_DEMO",
+                                "help": "Size of statically allocated buffers for holding topic names and payloads.",
+                                "id": "GRI_SUB_PUB_UNSUB_DEMO_STRING_BUFFER_LENGTH",
+                                "name": "GRI_SUB_PUB_UNSUB_DEMO_STRING_BUFFER_LENGTH",
+                                "range": null,
+                                "title": "Topic name and payload buffer length",
+                                "type": "int"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": "GRI_ENABLE_SUB_PUB_UNSUB_DEMO",
+                                "help": "Delay for each task between subscription, publish, unsubscription loops.",
+                                "id": "GRI_SUB_PUB_UNSUB_DEMO_DELAY_BETWEEN_SUB_PUB_UNSUB_LOOPS_MS",
+                                "name": "GRI_SUB_PUB_UNSUB_DEMO_DELAY_BETWEEN_SUB_PUB_UNSUB_LOOPS_MS",
+                                "range": null,
+                                "title": "Delay between sub pub unsub loops in milliseconds",
+                                "type": "int"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": "GRI_ENABLE_SUB_PUB_UNSUB_DEMO",
+                                "help": "The maximum amount of time in milliseconds to wait for the commands to be posted to the MQTT agent should the MQTT agent's command queue be full. Tasks wait in the Blocked state, so don't use any CPU time.",
+                                "id": "GRI_SUB_PUB_UNSUB_DEMO_MAX_COMMAND_SEND_BLOCK_TIME_MS",
+                                "name": "GRI_SUB_PUB_UNSUB_DEMO_MAX_COMMAND_SEND_BLOCK_TIME_MS",
+                                "range": null,
+                                "title": "coreMQTT-Agent command post block time in milliseconds.",
+                                "type": "int"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": "GRI_ENABLE_SUB_PUB_UNSUB_DEMO",
+                                "help": "The QoS level of MQTT messages sent by this demo. This must be 0 or 1 if using AWS as AWS only supports levels 0 or 1. If using another MQTT broker, that supports QoS level 2, this can be set to 2.",
+                                "id": "GRI_SUB_PUB_UNSUB_DEMO_QOS_LEVEL",
+                                "name": "GRI_SUB_PUB_UNSUB_DEMO_QOS_LEVEL",
+                                "range": [
+                                    0,
+                                    2
+                                ],
+                                "title": "QoS level of MQTT operations",
+                                "type": "int"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": "GRI_ENABLE_SUB_PUB_UNSUB_DEMO",
+                                "help": "The number of SubPubUnsub tasks to create for this demo.",
+                                "id": "GRI_SUB_PUB_UNSUB_DEMO_NUM_TASKS_TO_CREATE",
+                                "name": "GRI_SUB_PUB_UNSUB_DEMO_NUM_TASKS_TO_CREATE",
+                                "range": null,
+                                "title": "Number of SubPubUnsub tasks to create",
+                                "type": "int"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": "GRI_ENABLE_SUB_PUB_UNSUB_DEMO",
+                                "help": "The task priority of each of the SubPubUnsub tasks.",
+                                "id": "GRI_SUB_PUB_UNSUB_DEMO_TASK_PRIORITY",
+                                "name": "GRI_SUB_PUB_UNSUB_DEMO_TASK_PRIORITY",
+                                "range": null,
+                                "title": "SubPubUnsub task priority.",
+                                "type": "int"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": "GRI_ENABLE_SUB_PUB_UNSUB_DEMO",
+                                "help": "The task stack size for each of the SubPubUnsub tasks.",
+                                "id": "GRI_SUB_PUB_UNSUB_DEMO_TASK_STACK_SIZE",
+                                "name": "GRI_SUB_PUB_UNSUB_DEMO_TASK_STACK_SIZE",
+                                "range": null,
+                                "title": "SubPubUnsub task stack size.",
+                                "type": "int"
+                            }
+                        ],
+                        "depends_on": "GRI_ENABLE_SUB_PUB_UNSUB_DEMO",
+                        "id": "featured-freertos-iot-integration-enable-pub-sub-unsub-demo-sub-pub-unsub-demo-configurations",
+                        "title": "Sub pub unsub demo configurations",
+                        "type": "menu"
+                    }
+                ],
+                "depends_on": "!GRI_RUN_QUALIFICATION_TEST",
+                "help": null,
+                "id": "GRI_ENABLE_SUB_PUB_UNSUB_DEMO",
+                "name": "GRI_ENABLE_SUB_PUB_UNSUB_DEMO",
+                "range": null,
+                "title": "Enable pub sub unsub demo",
+                "type": "bool"
+            },
+            {
+                "children": [
+                    {
+                        "children": [
+                            {
+                                "children": [
+                                    {
+                                        "children": [],
+                                        "depends_on": "<choice GRI_TEMPERATURE_PUB_SUB_AND_LED_CONTROL_DEMO_LED_TYPE>",
+                                        "help": null,
+                                        "id": "GRI_TEMPERATURE_PUB_SUB_AND_LED_CONTROL_DEMO_LED_GPIO",
+                                        "name": "GRI_TEMPERATURE_PUB_SUB_AND_LED_CONTROL_DEMO_LED_GPIO",
+                                        "range": null,
+                                        "title": "GPIO",
+                                        "type": "bool"
+                                    },
+                                    {
+                                        "children": [],
+                                        "depends_on": "<choice GRI_TEMPERATURE_PUB_SUB_AND_LED_CONTROL_DEMO_LED_TYPE>",
+                                        "help": null,
+                                        "id": "GRI_TEMPERATURE_PUB_SUB_AND_LED_CONTROL_DEMO_LED_RMT",
+                                        "name": "GRI_TEMPERATURE_PUB_SUB_AND_LED_CONTROL_DEMO_LED_RMT",
+                                        "range": null,
+                                        "title": "RMT - Addressable LED",
+                                        "type": "bool"
+                                    }
+                                ],
+                                "depends_on": "GRI_ENABLE_TEMPERATURE_PUB_SUB_AND_LED_CONTROL_DEMO",
+                                "help": "Defines the default peripheral for the GRI",
+                                "id": "featured-freertos-iot-integration-enable-temperature-sensor-pub-sub-and-led-control-demo-temperature-pub-sub-and-led-control-demo-configurations-led-type",
+                                "name": "GRI_TEMPERATURE_PUB_SUB_AND_LED_CONTROL_DEMO_LED_TYPE",
+                                "title": "LED type",
+                                "type": "choice"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": "GRI_ENABLE_TEMPERATURE_PUB_SUB_AND_LED_CONTROL_DEMO",
+                                "help": "GPIO number (IOxx) to blink on and off or the RMT signal for the addressable LED.\nSome GPIOs are used for other purposes (flash connections, etc.) and cannot be used for LED.",
+                                "id": "GRI_TEMPERATURE_PUB_SUB_AND_LED_CONTROL_DEMO_LED_GPIO_NUMBER",
+                                "name": "GRI_TEMPERATURE_PUB_SUB_AND_LED_CONTROL_DEMO_LED_GPIO_NUMBER",
+                                "range": null,
+                                "title": "GRI GPIO number",
+                                "type": "int"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": "GRI_ENABLE_TEMPERATURE_PUB_SUB_AND_LED_CONTROL_DEMO",
+                                "help": "Size of statically allocated buffers for holding topic names and payloads.",
+                                "id": "GRI_TEMPERATURE_PUB_SUB_AND_LED_CONTROL_DEMO_STRING_BUFFER_LENGTH",
+                                "name": "GRI_TEMPERATURE_PUB_SUB_AND_LED_CONTROL_DEMO_STRING_BUFFER_LENGTH",
+                                "range": null,
+                                "title": "Topic name and payload buffer length",
+                                "type": "int"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": "GRI_ENABLE_TEMPERATURE_PUB_SUB_AND_LED_CONTROL_DEMO",
+                                "help": "Delay for the synchronous publisher task between publishes.",
+                                "id": "GRI_TEMPERATURE_PUB_SUB_AND_LED_CONTROL_DEMO_DELAY_BETWEEN_PUBLISH_OPERATIONS_MS",
+                                "name": "GRI_TEMPERATURE_PUB_SUB_AND_LED_CONTROL_DEMO_DELAY_BETWEEN_PUBLISH_OPERATIONS_MS",
+                                "range": null,
+                                "title": "Delay between publishes in milliseconds",
+                                "type": "int"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": "GRI_ENABLE_TEMPERATURE_PUB_SUB_AND_LED_CONTROL_DEMO",
+                                "help": "The maximum amount of time in milliseconds to wait for the commands to be posted to the MQTT agent should the MQTT agent's command queue be full. Tasks wait in the Blocked state, so don't use any CPU time.",
+                                "id": "GRI_TEMPERATURE_PUB_SUB_AND_LED_CONTROL_DEMO_MAX_COMMAND_SEND_BLOCK_TIME_MS",
+                                "name": "GRI_TEMPERATURE_PUB_SUB_AND_LED_CONTROL_DEMO_MAX_COMMAND_SEND_BLOCK_TIME_MS",
+                                "range": null,
+                                "title": "coreMQTT-Agent command post block time in milliseconds.",
+                                "type": "int"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": "GRI_ENABLE_TEMPERATURE_PUB_SUB_AND_LED_CONTROL_DEMO",
+                                "help": "The QoS level of MQTT messages sent by this demo. This must be 0 or 1 if using AWS as AWS only supports levels 0 or 1. If using another MQTT broker, that supports QoS level 2, this can be set to 2.",
+                                "id": "GRI_TEMPERATURE_PUB_SUB_AND_LED_CONTROL_DEMO_QOS_LEVEL",
+                                "name": "GRI_TEMPERATURE_PUB_SUB_AND_LED_CONTROL_DEMO_QOS_LEVEL",
+                                "range": null,
+                                "title": "QoS level of MQTT operations",
+                                "type": "int"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": "GRI_ENABLE_TEMPERATURE_PUB_SUB_AND_LED_CONTROL_DEMO",
+                                "help": "The task priority of the temperature sensor publishing task.",
+                                "id": "GRI_TEMPERATURE_PUB_SUB_AND_LED_CONTROL_DEMO_TASK_PRIORITY",
+                                "name": "GRI_TEMPERATURE_PUB_SUB_AND_LED_CONTROL_DEMO_TASK_PRIORITY",
+                                "range": null,
+                                "title": "Temperature sensor publishing task priority.",
+                                "type": "int"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": "GRI_ENABLE_TEMPERATURE_PUB_SUB_AND_LED_CONTROL_DEMO",
+                                "help": "The task stack size of the temperature sensor publishing task.",
+                                "id": "GRI_TEMPERATURE_PUB_SUB_AND_LED_CONTROL_DEMO_TASK_STACK_SIZE",
+                                "name": "GRI_TEMPERATURE_PUB_SUB_AND_LED_CONTROL_DEMO_TASK_STACK_SIZE",
+                                "range": null,
+                                "title": "Temperature sensor publishing task stack size.",
+                                "type": "int"
+                            }
+                        ],
+                        "depends_on": "GRI_ENABLE_TEMPERATURE_PUB_SUB_AND_LED_CONTROL_DEMO",
+                        "id": "featured-freertos-iot-integration-enable-temperature-sensor-pub-sub-and-led-control-demo-temperature-pub-sub-and-led-control-demo-configurations",
+                        "title": "Temperature pub sub and LED control demo configurations",
+                        "type": "menu"
+                    }
+                ],
+                "depends_on": "!GRI_RUN_QUALIFICATION_TEST",
+                "help": null,
+                "id": "GRI_ENABLE_TEMPERATURE_PUB_SUB_AND_LED_CONTROL_DEMO",
+                "name": "GRI_ENABLE_TEMPERATURE_PUB_SUB_AND_LED_CONTROL_DEMO",
+                "range": null,
+                "title": "Enable temperature sensor pub sub and LED control demo",
+                "type": "bool"
+            },
+            {
+                "children": [
+                    {
+                        "children": [
+                            {
+                                "children": [],
+                                "depends_on": "GRI_ENABLE_OTA_DEMO",
+                                "help": "The maximum size of the file paths used in the demo.",
+                                "id": "GRI_OTA_DEMO_MAX_FILE_PATH_SIZE",
+                                "name": "GRI_OTA_DEMO_MAX_FILE_PATH_SIZE",
+                                "range": null,
+                                "title": "Max file path size.",
+                                "type": "int"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": "GRI_ENABLE_OTA_DEMO",
+                                "help": "The maximum size of the stream name required for downloading update file from streaming service.",
+                                "id": "GRI_OTA_DEMO_MAX_STREAM_NAME_SIZE",
+                                "name": "GRI_OTA_DEMO_MAX_STREAM_NAME_SIZE",
+                                "range": null,
+                                "title": "Max stream name size.",
+                                "type": "int"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": "GRI_ENABLE_OTA_DEMO",
+                                "help": "The delay used in the OTA demo task to periodically output the OTA statistics like number of packets received, dropped, processed and queued per connection.",
+                                "id": "GRI_OTA_DEMO_TASK_DELAY_MS",
+                                "name": "GRI_OTA_DEMO_TASK_DELAY_MS",
+                                "range": null,
+                                "title": "OTA statistic output delay milliseconds.",
+                                "type": "int"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": "GRI_ENABLE_OTA_DEMO",
+                                "help": "The maximum time for which OTA demo waits for an MQTT operation to be complete. This involves receiving an acknowledgment for broker for SUBSCRIBE, UNSUBSCRIBE and non QOS0 publishes.",
+                                "id": "GRI_OTA_DEMO_MQTT_TIMEOUT_MS",
+                                "name": "GRI_OTA_DEMO_MQTT_TIMEOUT_MS",
+                                "range": null,
+                                "title": "MQTT operation timeout milliseconds.",
+                                "type": "int"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": "GRI_ENABLE_OTA_DEMO",
+                                "help": null,
+                                "id": "GRI_OTA_DEMO_AGENT_TASK_PRIORITY",
+                                "name": "GRI_OTA_DEMO_AGENT_TASK_PRIORITY",
+                                "range": null,
+                                "title": "OTA agent task priority.",
+                                "type": "int"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": "GRI_ENABLE_OTA_DEMO",
+                                "help": null,
+                                "id": "GRI_OTA_DEMO_AGENT_TASK_STACK_SIZE",
+                                "name": "GRI_OTA_DEMO_AGENT_TASK_STACK_SIZE",
+                                "range": null,
+                                "title": "OTA agent task stack size.",
+                                "type": "int"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": "GRI_ENABLE_OTA_DEMO",
+                                "help": null,
+                                "id": "GRI_OTA_DEMO_DEMO_TASK_PRIORITY",
+                                "name": "GRI_OTA_DEMO_DEMO_TASK_PRIORITY",
+                                "range": null,
+                                "title": "OTA demo task priority.",
+                                "type": "int"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": "GRI_ENABLE_OTA_DEMO",
+                                "help": null,
+                                "id": "GRI_OTA_DEMO_DEMO_TASK_STACK_SIZE",
+                                "name": "GRI_OTA_DEMO_DEMO_TASK_STACK_SIZE",
+                                "range": null,
+                                "title": "OTA demo task stack size.",
+                                "type": "int"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": "GRI_ENABLE_OTA_DEMO",
+                                "help": null,
+                                "id": "GRI_OTA_DEMO_APP_VERSION_MAJOR",
+                                "name": "GRI_OTA_DEMO_APP_VERSION_MAJOR",
+                                "range": null,
+                                "title": "Application version major.",
+                                "type": "int"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": "GRI_ENABLE_OTA_DEMO",
+                                "help": null,
+                                "id": "GRI_OTA_DEMO_APP_VERSION_MINOR",
+                                "name": "GRI_OTA_DEMO_APP_VERSION_MINOR",
+                                "range": null,
+                                "title": "Application version minor.",
+                                "type": "int"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": "GRI_ENABLE_OTA_DEMO",
+                                "help": null,
+                                "id": "GRI_OTA_DEMO_APP_VERSION_BUILD",
+                                "name": "GRI_OTA_DEMO_APP_VERSION_BUILD",
+                                "range": null,
+                                "title": "Application version build.",
+                                "type": "int"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": "GRI_ENABLE_OTA_DEMO",
+                                "help": null,
+                                "id": "GRI_OTA_MAX_NUM_DATA_BUFFERS",
+                                "name": "GRI_OTA_MAX_NUM_DATA_BUFFERS",
+                                "range": null,
+                                "title": "OTA buffer number.",
+                                "type": "int"
+                            }
+                        ],
+                        "depends_on": "GRI_ENABLE_OTA_DEMO",
+                        "id": "featured-freertos-iot-integration-enable-ota-demo-ota-demo-configurations",
+                        "title": "OTA demo configurations",
+                        "type": "menu"
+                    }
+                ],
+                "depends_on": "!GRI_RUN_QUALIFICATION_TEST",
+                "help": null,
+                "id": "GRI_ENABLE_OTA_DEMO",
+                "name": "GRI_ENABLE_OTA_DEMO",
+                "range": null,
+                "title": "Enable OTA demo",
+                "type": "bool"
+            }
+        ],
+        "depends_on": null,
+        "id": "featured-freertos-iot-integration",
+        "title": "Featured FreeRTOS IoT Integration",
+        "type": "menu"
+    },
+    {
+        "children": [
+            {
                 "children": [
                     {
                         "children": [],
@@ -28283,6 +29182,539 @@
                 "depends_on": null,
                 "id": "component-config-wi-fi-provisioning-manager",
                 "title": "Wi-Fi Provisioning Manager",
+                "type": "menu"
+            },
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "depends_on": null,
+                        "help": "AWS IoT Device Defender Service supports both long and short names for keys\nin the report sent by a device.",
+                        "id": "DEFENDER_USE_LONG_KEYS",
+                        "name": "DEFENDER_USE_LONG_KEYS",
+                        "range": null,
+                        "title": "Use long key names.",
+                        "type": "bool"
+                    },
+                    {
+                        "children": [
+                            {
+                                "children": [],
+                                "depends_on": null,
+                                "help": null,
+                                "id": "DEVICE_DEFENDER_LOG_ERROR",
+                                "name": "DEVICE_DEFENDER_LOG_ERROR",
+                                "range": null,
+                                "title": "Enable Error Logging",
+                                "type": "bool"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": null,
+                                "help": null,
+                                "id": "DEVICE_DEFENDER_LOG_WARN",
+                                "name": "DEVICE_DEFENDER_LOG_WARN",
+                                "range": null,
+                                "title": "Enable Warning Logging",
+                                "type": "bool"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": null,
+                                "help": null,
+                                "id": "DEVICE_DEFENDER_LOG_INFO",
+                                "name": "DEVICE_DEFENDER_LOG_INFO",
+                                "range": null,
+                                "title": "Enable Info Logging",
+                                "type": "bool"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": null,
+                                "help": null,
+                                "id": "DEVICE_DEFENDER_LOG_DEBUG",
+                                "name": "DEVICE_DEFENDER_LOG_DEBUG",
+                                "range": null,
+                                "title": "Enable Debug Logging",
+                                "type": "bool"
+                            }
+                        ],
+                        "depends_on": null,
+                        "id": "component-config-device-defender-logging",
+                        "title": "Logging",
+                        "type": "menu"
+                    }
+                ],
+                "depends_on": null,
+                "id": "component-config-device-defender",
+                "title": "Device Defender",
+                "type": "menu"
+            },
+            {
+                "children": [
+                    {
+                        "children": [
+                            {
+                                "children": [],
+                                "depends_on": null,
+                                "help": null,
+                                "id": "DEVICE_SHADOW_LOG_ERROR",
+                                "name": "DEVICE_SHADOW_LOG_ERROR",
+                                "range": null,
+                                "title": "Enable Error Logging",
+                                "type": "bool"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": null,
+                                "help": null,
+                                "id": "DEVICE_SHADOW_LOG_WARN",
+                                "name": "DEVICE_SHADOW_LOG_WARN",
+                                "range": null,
+                                "title": "Enable Warning Logging",
+                                "type": "bool"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": null,
+                                "help": null,
+                                "id": "DEVICE_SHADOW_LOG_INFO",
+                                "name": "DEVICE_SHADOW_LOG_INFO",
+                                "range": null,
+                                "title": "Enable Info Logging",
+                                "type": "bool"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": null,
+                                "help": null,
+                                "id": "DEVICE_SHADOW_LOG_DEBUG",
+                                "name": "DEVICE_SHADOW_LOG_DEBUG",
+                                "range": null,
+                                "title": "Enable Debug Logging",
+                                "type": "bool"
+                            }
+                        ],
+                        "depends_on": null,
+                        "id": "component-config-device-shadow-logging",
+                        "title": "Logging",
+                        "type": "menu"
+                    }
+                ],
+                "depends_on": null,
+                "id": "component-config-device-shadow",
+                "title": "Device Shadow",
+                "type": "menu"
+            },
+            {
+                "children": [
+                    {
+                        "children": [
+                            {
+                                "children": [],
+                                "depends_on": null,
+                                "help": null,
+                                "id": "FLEET_PROVISIONING_LOG_ERROR",
+                                "name": "FLEET_PROVISIONING_LOG_ERROR",
+                                "range": null,
+                                "title": "Enable Error Logging",
+                                "type": "bool"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": null,
+                                "help": null,
+                                "id": "FLEET_PROVISIONING_LOG_WARN",
+                                "name": "FLEET_PROVISIONING_LOG_WARN",
+                                "range": null,
+                                "title": "Enable Warning Logging",
+                                "type": "bool"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": null,
+                                "help": null,
+                                "id": "FLEET_PROVISIONING_LOG_INFO",
+                                "name": "FLEET_PROVISIONING_LOG_INFO",
+                                "range": null,
+                                "title": "Enable Info Logging",
+                                "type": "bool"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": null,
+                                "help": null,
+                                "id": "FLEET_PROVISIONING_LOG_DEBUG",
+                                "name": "FLEET_PROVISIONING_LOG_DEBUG",
+                                "range": null,
+                                "title": "Enable Debug Logging",
+                                "type": "bool"
+                            }
+                        ],
+                        "depends_on": null,
+                        "id": "component-config-fleet-provisioning-logging",
+                        "title": "Logging",
+                        "type": "menu"
+                    }
+                ],
+                "depends_on": null,
+                "id": "component-config-fleet-provisioning",
+                "title": "Fleet Provisioning",
+                "type": "menu"
+            },
+            {
+                "children": [
+                    {
+                        "children": [
+                            {
+                                "children": [],
+                                "depends_on": null,
+                                "help": null,
+                                "id": "AWS_OTA_LOG_ERROR",
+                                "name": "AWS_OTA_LOG_ERROR",
+                                "range": null,
+                                "title": "Enable Error Logging",
+                                "type": "bool"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": null,
+                                "help": null,
+                                "id": "AWS_OTA_LOG_WARN",
+                                "name": "AWS_OTA_LOG_WARN",
+                                "range": null,
+                                "title": "Enable Warning Logging",
+                                "type": "bool"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": null,
+                                "help": null,
+                                "id": "AWS_OTA_LOG_INFO",
+                                "name": "AWS_OTA_LOG_INFO",
+                                "range": null,
+                                "title": "Enable Info Logging",
+                                "type": "bool"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": null,
+                                "help": null,
+                                "id": "AWS_OTA_LOG_DEBUG",
+                                "name": "AWS_OTA_LOG_DEBUG",
+                                "range": null,
+                                "title": "Enable Debug Logging",
+                                "type": "bool"
+                            }
+                        ],
+                        "depends_on": null,
+                        "id": "component-config-aws-mqtt-file-streams-logging",
+                        "title": "Logging",
+                        "type": "menu"
+                    },
+                    {
+                        "children": [],
+                        "depends_on": null,
+                        "help": "This configuration parameter allows you to provide custom configurations for OTA over MQTT.",
+                        "id": "MQTT_STREAMS_USE_CUSTOM_CONFIG",
+                        "name": "MQTT_STREAMS_USE_CUSTOM_CONFIG",
+                        "range": null,
+                        "title": "MQTT Streams use custom config",
+                        "type": "bool"
+                    }
+                ],
+                "depends_on": null,
+                "id": "component-config-aws-mqtt-file-streams",
+                "title": "AWS MQTT File Streams",
+                "type": "menu"
+            },
+            {
+                "children": [
+                    {
+                        "children": [
+                            {
+                                "children": [],
+                                "depends_on": null,
+                                "help": null,
+                                "id": "DEVICE_SHADOW_LOG_ERROR",
+                                "name": "DEVICE_SHADOW_LOG_ERROR",
+                                "range": null,
+                                "title": "Enable Error Logging",
+                                "type": "bool"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": null,
+                                "help": null,
+                                "id": "DEVICE_SHADOW_LOG_WARN",
+                                "name": "DEVICE_SHADOW_LOG_WARN",
+                                "range": null,
+                                "title": "Enable Warning Logging",
+                                "type": "bool"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": null,
+                                "help": null,
+                                "id": "DEVICE_SHADOW_LOG_INFO",
+                                "name": "DEVICE_SHADOW_LOG_INFO",
+                                "range": null,
+                                "title": "Enable Info Logging",
+                                "type": "bool"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": null,
+                                "help": null,
+                                "id": "DEVICE_SHADOW_LOG_DEBUG",
+                                "name": "DEVICE_SHADOW_LOG_DEBUG",
+                                "range": null,
+                                "title": "Enable Debug Logging",
+                                "type": "bool"
+                            }
+                        ],
+                        "depends_on": null,
+                        "id": "component-config-corehttp-logging",
+                        "title": "Logging",
+                        "type": "menu"
+                    }
+                ],
+                "depends_on": null,
+                "id": "component-config-corehttp",
+                "title": "coreHTTP",
+                "type": "menu"
+            },
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "depends_on": null,
+                        "help": "Determines the maximum number of MQTT PUBLISH messages, pending\nacknowledgment at a time, that are supported for incoming and outgoing\ndirection of messages, separately.\n\nQoS 1 and 2 MQTT PUBLISHes require acknowledgment from the server before\nthey can be completed. While they are awaiting the acknowledgment, the\nclient must maintain information about their state. The value of this\nmacro sets the limit on how many simultaneous PUBLISH states an MQTT\ncontext maintains, separately, for both incoming and outgoing direction of\nPUBLISHes.\n\nThe MQTT context maintains separate state records for outgoing\nand incoming PUBLISHes, and thus, 2 * MQTT_STATE_ARRAY_MAX_COUNT amount\nof memory is statically allocated for the state records.",
+                        "id": "MQTT_STATE_ARRAY_MAX_COUNT",
+                        "name": "MQTT_STATE_ARRAY_MAX_COUNT",
+                        "range": [
+                            0,
+                            4294967295
+                        ],
+                        "title": "Max Incoming/Outgoing Publish Messages Pending ACK",
+                        "type": "int"
+                    },
+                    {
+                        "children": [],
+                        "depends_on": null,
+                        "help": "The number of retries for receiving CONNACK.\n\nThe MQTT_MAX_CONNACK_RECEIVE_RETRY_COUNT will be used only when the\ntimeoutMs parameter of #MQTT_Connect is passed as 0 . The transport\nreceive for CONNACK will be retried MQTT_MAX_CONNACK_RECEIVE_RETRY_COUNT\ntimes before timing out. A value of 0 for this config will cause the\ntransport receive for CONNACK  to be invoked only once.",
+                        "id": "MQTT_MAX_CONNACK_RECEIVE_RETRY_COUNT",
+                        "name": "MQTT_MAX_CONNACK_RECEIVE_RETRY_COUNT",
+                        "range": [
+                            0,
+                            65535
+                        ],
+                        "title": "Max CONNACK Retries",
+                        "type": "int"
+                    },
+                    {
+                        "children": [],
+                        "depends_on": null,
+                        "help": "This can be any positive integer up to SIZE_MAX.\n\nMaximum number of milliseconds to wait for a ping response to a ping\nrequest as part of the keep-alive mechanism.\n\nIf a ping response is not received before this timeout, then\nMQTT_ProcessLoop function will return MQTTKeepAliveTimeout.\n\nIf this value is more than half of the keep alive interval, and the\nserver does not receive the previous ping request, then it is likely that the\nserver will disconnect the client before #MQTTKeepAliveTimeout can be returned.\n\nIf a dummy implementation of the MQTTGetCurrentTimeFunc_t timer function,\nis supplied to the library, then the keep-alive mechanism is not supported by the\nMQTT_ProcessLoop API function. In that case, the value of MQTT_PINGRESP_TIMEOUT_MS\nis irrelevant to the behavior of the library.",
+                        "id": "MQTT_PINGRESP_TIMEOUT_MS",
+                        "name": "MQTT_PINGRESP_TIMEOUT_MS",
+                        "range": null,
+                        "title": "Ping Response Timeout Milliseconds",
+                        "type": "int"
+                    },
+                    {
+                        "children": [],
+                        "depends_on": null,
+                        "help": "The maximum duration between non-empty network reads while\nreceiving an MQTT packet via the MQTT_ProcessLoop or MQTT_ReceiveLoop\nAPI functions.\n\nWhen an incoming MQTT packet is detected, the transport receive function\nmay be called multiple times until all of the expected number of bytes of the\npacket are received. This timeout represents the maximum polling duration that\nis allowed without any data reception from the network for the incoming packet.\n\nIf the timeout expires, the MQTT_ProcessLoop and MQTT_ReceiveLoop functions\nreturn MQTTRecvFailed.\n\nIf a dummy implementation of the MQTTGetCurrentTimeFunc_t timer function,\nis supplied to the library, then MQTT_RECV_POLLING_TIMEOUT_MS MUST be set to 0.",
+                        "id": "MQTT_RECV_POLLING_TIMEOUT_MS",
+                        "name": "MQTT_RECV_POLLING_TIMEOUT_MS",
+                        "range": [
+                            0,
+                            4294967295
+                        ],
+                        "title": "MQTT Packet Receive Polling Timeout",
+                        "type": "int"
+                    },
+                    {
+                        "children": [],
+                        "depends_on": null,
+                        "help": "The maximum duration allowed to send an MQTT packet over the transport\ninterface.\n\nWhen sending an MQTT packet, the transport send or writev functions may be\ncalled multiple times until all of the required number of bytes are sent.\nThis timeout represents the maximum duration that is allowed to send the MQTT\npacket while calling the transport send or writev functions.\n\nIf the timeout expires, #MQTTSendFailed will be returned by the public API\nfunctions.\n\nIf a dummy implementation of the #MQTTGetCurrentTimeFunc_t timer function,\nis supplied to the library, then #MQTT_SEND_TIMEOUT_MS MUST be set to 0.",
+                        "id": "MQTT_SEND_TIMEOUT_MS",
+                        "name": "MQTT_SEND_TIMEOUT_MS",
+                        "range": [
+                            0,
+                            4294967295
+                        ],
+                        "title": "MQTT Send Timeout Milliseconds",
+                        "type": "int"
+                    },
+                    {
+                        "children": [
+                            {
+                                "children": [],
+                                "depends_on": null,
+                                "help": null,
+                                "id": "CORE_MQTT_LOG_ERROR",
+                                "name": "CORE_MQTT_LOG_ERROR",
+                                "range": null,
+                                "title": "Enable Error Logging",
+                                "type": "bool"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": null,
+                                "help": null,
+                                "id": "CORE_MQTT_LOG_WARN",
+                                "name": "CORE_MQTT_LOG_WARN",
+                                "range": null,
+                                "title": "Enable Warning Logging",
+                                "type": "bool"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": null,
+                                "help": null,
+                                "id": "CORE_MQTT_LOG_INFO",
+                                "name": "CORE_MQTT_LOG_INFO",
+                                "range": null,
+                                "title": "Enable Info Logging",
+                                "type": "bool"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": null,
+                                "help": null,
+                                "id": "CORE_MQTT_LOG_DEBUG",
+                                "name": "CORE_MQTT_LOG_DEBUG",
+                                "range": null,
+                                "title": "Enable Debug Logging",
+                                "type": "bool"
+                            }
+                        ],
+                        "depends_on": null,
+                        "id": "component-config-coremqtt-logging",
+                        "title": "Logging",
+                        "type": "menu"
+                    }
+                ],
+                "depends_on": null,
+                "id": "component-config-coremqtt",
+                "title": "coreMQTT",
+                "type": "menu"
+            },
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "depends_on": null,
+                        "help": "This can be set to any positive integer up to SIZE_MAX.\nThe maximum number of pending acknowledgments to track for a single connection.\nThe MQTT agent tracks MQTT commands (such as PUBLISH and SUBSCRIBE) that are still \nwaiting to be acknowledged. MQTT_AGENT_MAX_OUTSTANDING_ACKS set the maximum number \nof acknowledgments that can be outstanding at any one time. The higher this number \nis the greater the agent's RAM consumption will be.",
+                        "id": "MQTT_AGENT_MAX_OUTSTANDING_ACKS",
+                        "name": "MQTT_AGENT_MAX_OUTSTANDING_ACKS",
+                        "range": null,
+                        "title": "Max Pending ACKS Per Connection",
+                        "type": "int"
+                    },
+                    {
+                        "children": [],
+                        "depends_on": null,
+                        "help": "Time in milliseconds that the MQTT agent task will wait in the Blocked state \n(so not using any CPU time) for a command to arrive in its command queue before \nexiting the blocked state so it can call MQTT_ProcessLoop().\nIt is important that MQTT_ProcessLoop() is called often if there is known MQTT \ntraffic, but calling it too often can take processing time away from lower priority \ntasks and waste CPU time and power.",
+                        "id": "MQTT_AGENT_MAX_EVENT_QUEUE_WAIT_TIME",
+                        "name": "MQTT_AGENT_MAX_EVENT_QUEUE_WAIT_TIME",
+                        "range": [
+                            0,
+                            4294967295
+                        ],
+                        "title": "Max Event Queue Wait Time Milliseconds",
+                        "type": "int"
+                    }
+                ],
+                "depends_on": null,
+                "id": "component-config-coremqtt-agent",
+                "title": "coreMQTT-Agent",
+                "type": "menu"
+            },
+            {
+                "children": [
+                    {
+                        "children": [
+                            {
+                                "children": [],
+                                "depends_on": null,
+                                "help": null,
+                                "id": "CORE_PKCS_LOG_ERROR",
+                                "name": "CORE_PKCS_LOG_ERROR",
+                                "range": null,
+                                "title": "Enable Error Logging",
+                                "type": "bool"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": null,
+                                "help": null,
+                                "id": "CORE_PKCS_LOG_WARN",
+                                "name": "CORE_PKCS_LOG_WARN",
+                                "range": null,
+                                "title": "Enable Warning Logging",
+                                "type": "bool"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": null,
+                                "help": null,
+                                "id": "CORE_PKCS_LOG_INFO",
+                                "name": "CORE_PKCS_LOG_INFO",
+                                "range": null,
+                                "title": "Enable Info Logging",
+                                "type": "bool"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": null,
+                                "help": null,
+                                "id": "CORE_PKCS_LOG_DEBUG",
+                                "name": "CORE_PKCS_LOG_DEBUG",
+                                "range": null,
+                                "title": "Enable Debug Logging",
+                                "type": "bool"
+                            }
+                        ],
+                        "depends_on": null,
+                        "id": "component-config-corepkcs11-logging",
+                        "title": "Logging",
+                        "type": "menu"
+                    }
+                ],
+                "depends_on": null,
+                "id": "component-config-corepkcs11",
+                "title": "corePKCS11",
+                "type": "menu"
+            },
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "depends_on": "!IDF_TARGET_ESP32 && !IDF_TARGET_ESP32C2",
+                        "help": "Enable the DS peripheral support. Not supported on esp32 and esp32c2.",
+                        "id": "ESP_SECURE_CERT_DS_PERIPHERAL",
+                        "name": "ESP_SECURE_CERT_DS_PERIPHERAL",
+                        "range": null,
+                        "title": "Enable DS peripheral support",
+                        "type": "bool"
+                    },
+                    {
+                        "children": [],
+                        "depends_on": null,
+                        "help": "This option enables support for the legacy formats along with\nthe current format in the esp_secure_cert component.\nThe current format is\ncust_flash_tlv\nThe legacy formats are as follows:\ncust_flash\nnvs",
+                        "id": "ESP_SECURE_CERT_SUPPORT_LEGACY_FORMATS",
+                        "name": "ESP_SECURE_CERT_SUPPORT_LEGACY_FORMATS",
+                        "range": null,
+                        "title": "Enable support for legacy formats",
+                        "type": "bool"
+                    }
+                ],
+                "depends_on": null,
+                "id": "component-config-esp-secure-cert-manager",
+                "title": "ESP Secure Cert Manager",
                 "type": "menu"
             }
         ],

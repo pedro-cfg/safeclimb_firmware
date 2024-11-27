@@ -1783,6 +1783,234 @@ rule C_STATIC_LIBRARY_LINKER____idf_wifi_provisioning_
 #############################################
 # Rule for compiling C files.
 
+rule C_COMPILER____idf_qrcode_
+  depfile = $DEP_FILE
+  deps = gcc
+  command = /home/pedro/.espressif/tools/xtensa-esp-elf/esp-13.2.0_20240530/xtensa-esp-elf/bin/xtensa-esp32-elf-gcc $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  description = Building C object $out
+
+
+#############################################
+# Rule for linking C static library.
+
+rule C_STATIC_LIBRARY_LINKER____idf_qrcode_
+  command = $PRE_LINK && /home/pedro/.espressif/tools/cmake/3.24.0/bin/cmake -E rm -f $TARGET_FILE && /home/pedro/.espressif/tools/xtensa-esp-elf/esp-13.2.0_20240530/xtensa-esp-elf/bin/xtensa-esp32-elf-ar qc $TARGET_FILE $LINK_FLAGS $in && /home/pedro/.espressif/tools/xtensa-esp-elf/esp-13.2.0_20240530/xtensa-esp-elf/bin/xtensa-esp32-elf-ranlib $TARGET_FILE && $POST_BUILD
+  description = Linking C static library $TARGET_FILE
+  restat = $RESTAT
+
+
+#############################################
+# Rule for compiling C files.
+
+rule C_COMPILER____idf_coreMQTT_
+  depfile = $DEP_FILE
+  deps = gcc
+  command = /home/pedro/.espressif/tools/xtensa-esp-elf/esp-13.2.0_20240530/xtensa-esp-elf/bin/xtensa-esp32-elf-gcc $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  description = Building C object $out
+
+
+#############################################
+# Rule for linking C static library.
+
+rule C_STATIC_LIBRARY_LINKER____idf_coreMQTT_
+  command = $PRE_LINK && /home/pedro/.espressif/tools/cmake/3.24.0/bin/cmake -E rm -f $TARGET_FILE && /home/pedro/.espressif/tools/xtensa-esp-elf/esp-13.2.0_20240530/xtensa-esp-elf/bin/xtensa-esp32-elf-ar qc $TARGET_FILE $LINK_FLAGS $in && /home/pedro/.espressif/tools/xtensa-esp-elf/esp-13.2.0_20240530/xtensa-esp-elf/bin/xtensa-esp32-elf-ranlib $TARGET_FILE && $POST_BUILD
+  description = Linking C static library $TARGET_FILE
+  restat = $RESTAT
+
+
+#############################################
+# Rule for compiling C files.
+
+rule C_COMPILER____idf_coreMQTT-Agent_
+  depfile = $DEP_FILE
+  deps = gcc
+  command = /home/pedro/.espressif/tools/xtensa-esp-elf/esp-13.2.0_20240530/xtensa-esp-elf/bin/xtensa-esp32-elf-gcc $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  description = Building C object $out
+
+
+#############################################
+# Rule for linking C static library.
+
+rule C_STATIC_LIBRARY_LINKER____idf_coreMQTT-Agent_
+  command = $PRE_LINK && /home/pedro/.espressif/tools/cmake/3.24.0/bin/cmake -E rm -f $TARGET_FILE && /home/pedro/.espressif/tools/xtensa-esp-elf/esp-13.2.0_20240530/xtensa-esp-elf/bin/xtensa-esp32-elf-ar qc $TARGET_FILE $LINK_FLAGS $in && /home/pedro/.espressif/tools/xtensa-esp-elf/esp-13.2.0_20240530/xtensa-esp-elf/bin/xtensa-esp32-elf-ranlib $TARGET_FILE && $POST_BUILD
+  description = Linking C static library $TARGET_FILE
+  restat = $RESTAT
+
+
+#############################################
+# Rule for compiling C files.
+
+rule C_COMPILER____idf_corePKCS11_
+  depfile = $DEP_FILE
+  deps = gcc
+  command = /home/pedro/.espressif/tools/xtensa-esp-elf/esp-13.2.0_20240530/xtensa-esp-elf/bin/xtensa-esp32-elf-gcc $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  description = Building C object $out
+
+
+#############################################
+# Rule for linking C static library.
+
+rule C_STATIC_LIBRARY_LINKER____idf_corePKCS11_
+  command = $PRE_LINK && /home/pedro/.espressif/tools/cmake/3.24.0/bin/cmake -E rm -f $TARGET_FILE && /home/pedro/.espressif/tools/xtensa-esp-elf/esp-13.2.0_20240530/xtensa-esp-elf/bin/xtensa-esp32-elf-ar qc $TARGET_FILE $LINK_FLAGS $in && /home/pedro/.espressif/tools/xtensa-esp-elf/esp-13.2.0_20240530/xtensa-esp-elf/bin/xtensa-esp32-elf-ranlib $TARGET_FILE && $POST_BUILD
+  description = Linking C static library $TARGET_FILE
+  restat = $RESTAT
+
+
+#############################################
+# Rule for compiling C files.
+
+rule C_COMPILER____idf_coreJSON_
+  depfile = $DEP_FILE
+  deps = gcc
+  command = /home/pedro/.espressif/tools/xtensa-esp-elf/esp-13.2.0_20240530/xtensa-esp-elf/bin/xtensa-esp32-elf-gcc $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  description = Building C object $out
+
+
+#############################################
+# Rule for linking C static library.
+
+rule C_STATIC_LIBRARY_LINKER____idf_coreJSON_
+  command = $PRE_LINK && /home/pedro/.espressif/tools/cmake/3.24.0/bin/cmake -E rm -f $TARGET_FILE && /home/pedro/.espressif/tools/xtensa-esp-elf/esp-13.2.0_20240530/xtensa-esp-elf/bin/xtensa-esp32-elf-ar qc $TARGET_FILE $LINK_FLAGS $in && /home/pedro/.espressif/tools/xtensa-esp-elf/esp-13.2.0_20240530/xtensa-esp-elf/bin/xtensa-esp32-elf-ranlib $TARGET_FILE && $POST_BUILD
+  description = Linking C static library $TARGET_FILE
+  restat = $RESTAT
+
+
+#############################################
+# Rule for compiling C files.
+
+rule C_COMPILER____idf_backoffAlgorithm_
+  depfile = $DEP_FILE
+  deps = gcc
+  command = /home/pedro/.espressif/tools/xtensa-esp-elf/esp-13.2.0_20240530/xtensa-esp-elf/bin/xtensa-esp32-elf-gcc $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  description = Building C object $out
+
+
+#############################################
+# Rule for linking C static library.
+
+rule C_STATIC_LIBRARY_LINKER____idf_backoffAlgorithm_
+  command = $PRE_LINK && /home/pedro/.espressif/tools/cmake/3.24.0/bin/cmake -E rm -f $TARGET_FILE && /home/pedro/.espressif/tools/xtensa-esp-elf/esp-13.2.0_20240530/xtensa-esp-elf/bin/xtensa-esp32-elf-ar qc $TARGET_FILE $LINK_FLAGS $in && /home/pedro/.espressif/tools/xtensa-esp-elf/esp-13.2.0_20240530/xtensa-esp-elf/bin/xtensa-esp32-elf-ranlib $TARGET_FILE && $POST_BUILD
+  description = Linking C static library $TARGET_FILE
+  restat = $RESTAT
+
+
+#############################################
+# Rule for compiling C files.
+
+rule C_COMPILER____idf_espressif__esp_secure_cert_mgr_
+  depfile = $DEP_FILE
+  deps = gcc
+  command = /home/pedro/.espressif/tools/xtensa-esp-elf/esp-13.2.0_20240530/xtensa-esp-elf/bin/xtensa-esp32-elf-gcc $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  description = Building C object $out
+
+
+#############################################
+# Rule for linking C static library.
+
+rule C_STATIC_LIBRARY_LINKER____idf_espressif__esp_secure_cert_mgr_
+  command = $PRE_LINK && /home/pedro/.espressif/tools/cmake/3.24.0/bin/cmake -E rm -f $TARGET_FILE && /home/pedro/.espressif/tools/xtensa-esp-elf/esp-13.2.0_20240530/xtensa-esp-elf/bin/xtensa-esp32-elf-ar qc $TARGET_FILE $LINK_FLAGS $in && /home/pedro/.espressif/tools/xtensa-esp-elf/esp-13.2.0_20240530/xtensa-esp-elf/bin/xtensa-esp32-elf-ranlib $TARGET_FILE && $POST_BUILD
+  description = Linking C static library $TARGET_FILE
+  restat = $RESTAT
+
+
+#############################################
+# Rule for compiling C files.
+
+rule C_COMPILER____idf_Jobs-for-AWS-IoT-embedded-sdk_
+  depfile = $DEP_FILE
+  deps = gcc
+  command = /home/pedro/.espressif/tools/xtensa-esp-elf/esp-13.2.0_20240530/xtensa-esp-elf/bin/xtensa-esp32-elf-gcc $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  description = Building C object $out
+
+
+#############################################
+# Rule for linking C static library.
+
+rule C_STATIC_LIBRARY_LINKER____idf_Jobs-for-AWS-IoT-embedded-sdk_
+  command = $PRE_LINK && /home/pedro/.espressif/tools/cmake/3.24.0/bin/cmake -E rm -f $TARGET_FILE && /home/pedro/.espressif/tools/xtensa-esp-elf/esp-13.2.0_20240530/xtensa-esp-elf/bin/xtensa-esp32-elf-ar qc $TARGET_FILE $LINK_FLAGS $in && /home/pedro/.espressif/tools/xtensa-esp-elf/esp-13.2.0_20240530/xtensa-esp-elf/bin/xtensa-esp32-elf-ranlib $TARGET_FILE && $POST_BUILD
+  description = Linking C static library $TARGET_FILE
+  restat = $RESTAT
+
+
+#############################################
+# Rule for compiling C files.
+
+rule C_COMPILER____idf_espressif__cbor_
+  depfile = $DEP_FILE
+  deps = gcc
+  command = /home/pedro/.espressif/tools/xtensa-esp-elf/esp-13.2.0_20240530/xtensa-esp-elf/bin/xtensa-esp32-elf-gcc $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  description = Building C object $out
+
+
+#############################################
+# Rule for linking C static library.
+
+rule C_STATIC_LIBRARY_LINKER____idf_espressif__cbor_
+  command = $PRE_LINK && /home/pedro/.espressif/tools/cmake/3.24.0/bin/cmake -E rm -f $TARGET_FILE && /home/pedro/.espressif/tools/xtensa-esp-elf/esp-13.2.0_20240530/xtensa-esp-elf/bin/xtensa-esp32-elf-ar qc $TARGET_FILE $LINK_FLAGS $in && /home/pedro/.espressif/tools/xtensa-esp-elf/esp-13.2.0_20240530/xtensa-esp-elf/bin/xtensa-esp32-elf-ranlib $TARGET_FILE && $POST_BUILD
+  description = Linking C static library $TARGET_FILE
+  restat = $RESTAT
+
+
+#############################################
+# Rule for compiling C files.
+
+rule C_COMPILER____idf_aws-iot-core-mqtt-file-streams-embedded-c_
+  depfile = $DEP_FILE
+  deps = gcc
+  command = /home/pedro/.espressif/tools/xtensa-esp-elf/esp-13.2.0_20240530/xtensa-esp-elf/bin/xtensa-esp32-elf-gcc $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  description = Building C object $out
+
+
+#############################################
+# Rule for linking C static library.
+
+rule C_STATIC_LIBRARY_LINKER____idf_aws-iot-core-mqtt-file-streams-embedded-c_
+  command = $PRE_LINK && /home/pedro/.espressif/tools/cmake/3.24.0/bin/cmake -E rm -f $TARGET_FILE && /home/pedro/.espressif/tools/xtensa-esp-elf/esp-13.2.0_20240530/xtensa-esp-elf/bin/xtensa-esp32-elf-ar qc $TARGET_FILE $LINK_FLAGS $in && /home/pedro/.espressif/tools/xtensa-esp-elf/esp-13.2.0_20240530/xtensa-esp-elf/bin/xtensa-esp32-elf-ranlib $TARGET_FILE && $POST_BUILD
+  description = Linking C static library $TARGET_FILE
+  restat = $RESTAT
+
+
+#############################################
+# Rule for compiling C files.
+
+rule C_COMPILER____idf_coreHTTP_
+  depfile = $DEP_FILE
+  deps = gcc
+  command = /home/pedro/.espressif/tools/xtensa-esp-elf/esp-13.2.0_20240530/xtensa-esp-elf/bin/xtensa-esp32-elf-gcc $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  description = Building C object $out
+
+
+#############################################
+# Rule for linking C static library.
+
+rule C_STATIC_LIBRARY_LINKER____idf_coreHTTP_
+  command = $PRE_LINK && /home/pedro/.espressif/tools/cmake/3.24.0/bin/cmake -E rm -f $TARGET_FILE && /home/pedro/.espressif/tools/xtensa-esp-elf/esp-13.2.0_20240530/xtensa-esp-elf/bin/xtensa-esp32-elf-ar qc $TARGET_FILE $LINK_FLAGS $in && /home/pedro/.espressif/tools/xtensa-esp-elf/esp-13.2.0_20240530/xtensa-esp-elf/bin/xtensa-esp32-elf-ranlib $TARGET_FILE && $POST_BUILD
+  description = Linking C static library $TARGET_FILE
+  restat = $RESTAT
+
+
+#############################################
+# Rule for compiling C files.
+
+rule C_COMPILER____idf_FreeRTOS-Libraries-Integration-Tests_
+  depfile = $DEP_FILE
+  deps = gcc
+  command = /home/pedro/.espressif/tools/xtensa-esp-elf/esp-13.2.0_20240530/xtensa-esp-elf/bin/xtensa-esp32-elf-gcc $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  description = Building C object $out
+
+
+#############################################
+# Rule for linking C static library.
+
+rule C_STATIC_LIBRARY_LINKER____idf_FreeRTOS-Libraries-Integration-Tests_
+  command = $PRE_LINK && /home/pedro/.espressif/tools/cmake/3.24.0/bin/cmake -E rm -f $TARGET_FILE && /home/pedro/.espressif/tools/xtensa-esp-elf/esp-13.2.0_20240530/xtensa-esp-elf/bin/xtensa-esp32-elf-ar qc $TARGET_FILE $LINK_FLAGS $in && /home/pedro/.espressif/tools/xtensa-esp-elf/esp-13.2.0_20240530/xtensa-esp-elf/bin/xtensa-esp32-elf-ranlib $TARGET_FILE && $POST_BUILD
+  description = Linking C static library $TARGET_FILE
+  restat = $RESTAT
+
+
+#############################################
+# Rule for compiling C files.
+
 rule C_COMPILER____idf_dht11_
   depfile = $DEP_FILE
   deps = gcc
@@ -1857,6 +2085,16 @@ rule C_STATIC_LIBRARY_LINKER____idf_temperature_
 
 
 #############################################
+# Rule for compiling ASM files.
+
+rule ASM_COMPILER____idf_main_
+  depfile = $DEP_FILE
+  deps = gcc
+  command = /home/pedro/.espressif/tools/xtensa-esp-elf/esp-13.2.0_20240530/xtensa-esp-elf/bin/xtensa-esp32-elf-gcc $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  description = Building ASM object $out
+
+
+#############################################
 # Rule for compiling C files.
 
 rule C_COMPILER____idf_main_
@@ -1880,6 +2118,63 @@ rule CXX_COMPILER____idf_main_
 # Rule for linking C static library.
 
 rule C_STATIC_LIBRARY_LINKER____idf_main_
+  command = $PRE_LINK && /home/pedro/.espressif/tools/cmake/3.24.0/bin/cmake -E rm -f $TARGET_FILE && /home/pedro/.espressif/tools/xtensa-esp-elf/esp-13.2.0_20240530/xtensa-esp-elf/bin/xtensa-esp32-elf-ar qc $TARGET_FILE $LINK_FLAGS $in && /home/pedro/.espressif/tools/xtensa-esp-elf/esp-13.2.0_20240530/xtensa-esp-elf/bin/xtensa-esp32-elf-ranlib $TARGET_FILE && $POST_BUILD
+  description = Linking C static library $TARGET_FILE
+  restat = $RESTAT
+
+
+#############################################
+# Rule for compiling C files.
+
+rule C_COMPILER____idf_Device-Defender-for-AWS-IoT-embedded-sdk_
+  depfile = $DEP_FILE
+  deps = gcc
+  command = /home/pedro/.espressif/tools/xtensa-esp-elf/esp-13.2.0_20240530/xtensa-esp-elf/bin/xtensa-esp32-elf-gcc $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  description = Building C object $out
+
+
+#############################################
+# Rule for linking C static library.
+
+rule C_STATIC_LIBRARY_LINKER____idf_Device-Defender-for-AWS-IoT-embedded-sdk_
+  command = $PRE_LINK && /home/pedro/.espressif/tools/cmake/3.24.0/bin/cmake -E rm -f $TARGET_FILE && /home/pedro/.espressif/tools/xtensa-esp-elf/esp-13.2.0_20240530/xtensa-esp-elf/bin/xtensa-esp32-elf-ar qc $TARGET_FILE $LINK_FLAGS $in && /home/pedro/.espressif/tools/xtensa-esp-elf/esp-13.2.0_20240530/xtensa-esp-elf/bin/xtensa-esp32-elf-ranlib $TARGET_FILE && $POST_BUILD
+  description = Linking C static library $TARGET_FILE
+  restat = $RESTAT
+
+
+#############################################
+# Rule for compiling C files.
+
+rule C_COMPILER____idf_Device-Shadow-for-AWS-IoT-embedded-sdk_
+  depfile = $DEP_FILE
+  deps = gcc
+  command = /home/pedro/.espressif/tools/xtensa-esp-elf/esp-13.2.0_20240530/xtensa-esp-elf/bin/xtensa-esp32-elf-gcc $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  description = Building C object $out
+
+
+#############################################
+# Rule for linking C static library.
+
+rule C_STATIC_LIBRARY_LINKER____idf_Device-Shadow-for-AWS-IoT-embedded-sdk_
+  command = $PRE_LINK && /home/pedro/.espressif/tools/cmake/3.24.0/bin/cmake -E rm -f $TARGET_FILE && /home/pedro/.espressif/tools/xtensa-esp-elf/esp-13.2.0_20240530/xtensa-esp-elf/bin/xtensa-esp32-elf-ar qc $TARGET_FILE $LINK_FLAGS $in && /home/pedro/.espressif/tools/xtensa-esp-elf/esp-13.2.0_20240530/xtensa-esp-elf/bin/xtensa-esp32-elf-ranlib $TARGET_FILE && $POST_BUILD
+  description = Linking C static library $TARGET_FILE
+  restat = $RESTAT
+
+
+#############################################
+# Rule for compiling C files.
+
+rule C_COMPILER____idf_Fleet-Provisioning-for-AWS-IoT-embedded-sdk_
+  depfile = $DEP_FILE
+  deps = gcc
+  command = /home/pedro/.espressif/tools/xtensa-esp-elf/esp-13.2.0_20240530/xtensa-esp-elf/bin/xtensa-esp32-elf-gcc $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  description = Building C object $out
+
+
+#############################################
+# Rule for linking C static library.
+
+rule C_STATIC_LIBRARY_LINKER____idf_Fleet-Provisioning-for-AWS-IoT-embedded-sdk_
   command = $PRE_LINK && /home/pedro/.espressif/tools/cmake/3.24.0/bin/cmake -E rm -f $TARGET_FILE && /home/pedro/.espressif/tools/xtensa-esp-elf/esp-13.2.0_20240530/xtensa-esp-elf/bin/xtensa-esp32-elf-ar qc $TARGET_FILE $LINK_FLAGS $in && /home/pedro/.espressif/tools/xtensa-esp-elf/esp-13.2.0_20240530/xtensa-esp-elf/bin/xtensa-esp32-elf-ranlib $TARGET_FILE && $POST_BUILD
   description = Linking C static library $TARGET_FILE
   restat = $RESTAT

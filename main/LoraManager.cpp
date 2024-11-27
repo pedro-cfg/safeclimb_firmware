@@ -1,5 +1,6 @@
 #include "LoraManager.h"
 #include "driver/rtc_io.h"
+#include "esp_task_wdt.h"
 #include <cstring>
 
 LoraManager::LoraManager()
@@ -18,8 +19,9 @@ LoraManager::~LoraManager()
 	
 }
 
-void LoraManager::init()
+void LoraManager::init(WIFI* w)
 {
+	wifi = w;
 	if (lora_init() == 0) {
 		printf("Does not recognize the module");
 	}
@@ -38,7 +40,6 @@ void LoraManager::init()
 
 void LoraManager::exec()
 {
-	
     gettimeofday(&now, NULL);
     
     if(keepAlive)
@@ -52,6 +53,13 @@ void LoraManager::exec()
 	}
     else if((int)(now.tv_sec) - (int)(initial_time.tv_sec) >= GLOBAL_TIMEOUT)
     {
+		if(state == Receive_Return_Confirm_ || state == Receive_Return_ || state == Send_Return_)
+		{
+			if(actualPackage.getDestinyNumber() == tower_number)
+			{
+				consumeInfo();
+			}
+		}
 		if(state != Receive_Payload_)
 			Sleep();
 	}
@@ -173,6 +181,7 @@ void LoraManager::Receive_Payload()
 //		printf("The RSSI value is: %d\n", rssi);
 //		printf("The SNR value is: %d\n\n", snr);
 	}
+	vTaskDelay(1);
 }
 
 void LoraManager::Receive_Confirm_Primary()
@@ -204,6 +213,7 @@ void LoraManager::Receive_Confirm_Primary()
 	{
 		changeState(Send_Payload_);
 	}
+	vTaskDelay(1);
 }
 
 void LoraManager::Receive_Return()
@@ -226,6 +236,7 @@ void LoraManager::Receive_Return()
 			}
 		}
 	}
+	vTaskDelay(1);
 }
 
 void LoraManager::Receive_Return_Confirm()
@@ -257,6 +268,7 @@ void LoraManager::Receive_Return_Confirm()
 	{
 		changeState(Send_Return_);
 	}
+	vTaskDelay(1);
 }
 
 
@@ -347,7 +359,7 @@ void LoraManager::consumeInfo()
 		if(SERVER_TOWER)
 		{
 			bluetooth_tower = actualPackage.getOriginalNumber();
-			printf("Enviando mensagem para a torre %d",bluetooth_tower);
+			//printf("Enviando mensagem para a torre %d",bluetooth_tower);
 			//Código para mandar para o twilio
 			teste = true;
 		}
@@ -364,6 +376,8 @@ void LoraManager::consumeInfo()
 		printf("SOIL HUMIDITY: %d\n", actualPackage.getSoilHumidity());
 		printf("WIND SPEED: %d\n", actualPackage.getWindSpeed());
 		printf("RAIN: %d\n", actualPackage.getRain());	
+		printf("Mensagem recebida: [%.*s]\n", actualPackage.getPayloadSize(),actualPackage.getPayload());
+		wifi->MQTTpublish(actualPackage.getTemperature(),actualPackage.getAirHumidity(),actualPackage.getSoilHumidity(),actualPackage.getWindSpeed(),actualPackage.getRain());
 	}
 				
 }
