@@ -1,0 +1,15 @@
+dependencies:
+  espressif/led_strip: "^2.4.1"
+  lora:
+    path: ../components/lora
+  one-wire:
+    path: ../components/one-wire
+  temperature:
+    path: ../components/temperature
+  dht11:
+    path: ../components/dht11
+  esp_driver_spi:
+    path: ${IDF_PATH}/components/esp_driver_spi
+  esp_driver_gpio:
+    path: ${IDF_PATH}/components/esp_driver_gpio
+

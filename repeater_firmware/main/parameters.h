@@ -1,0 +1,18 @@
+#define STACK_SIZE 200*32
+#define SLEEP_TIME 300
+#define BUTTON_GPIO GPIO_NUM_2
+
+#define CODING_RATE 7
+#define BANDWIDTH 7
+#define SPREAD_FACTOR 12
+
+#define BLUETOOTH_TIMEOUT 600
+#define GLOBAL_TIMEOUT 60
+#define LOCAL_TIMEOUT 10
+
+#define TOWER_NUMBER 0
+#define MAIN_TOWER 0
+#define SERVER_TOWER 1
+
+#define BYTE_TIME 70
+#define EXTRA_TIME 1000
