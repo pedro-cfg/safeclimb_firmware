@@ -14,10 +14,12 @@
 #include "core_mqtt_serializer.h"
 #include "core_mqtt_agent_manager.h"
 
+class LoraManager;
+
 typedef struct IncomingPublishCallbackContext
 {
     EventGroupHandle_t xMqttEventGroup;
-    char pcIncomingPublish[ 100 ];
+    char pcIncomingPublish[ 4096 ];
 } IncomingPublishCallbackContext_t;
 
 #ifndef MAIN_WIFI_H_
@@ -34,13 +36,24 @@ private:
     static IncomingPublishCallbackContext_t xIncomingPublishCallbackContext;
 	static void prvCoreMqttAgentEventHandler( void * pvHandlerArg,esp_event_base_t xEventBase,int32_t lEventId,void * pvEventData );
 	static void prvPublishToTopic( MQTTQoS_t xQoS,char * pcTopicName,char * pcPayload,EventGroupHandle_t xMqttEventGroup );
+	static void prvSubscribeToTopic(IncomingPublishCallbackContext_t * pxIncomingPublishCallbackContext,MQTTQoS_t xQoS,char * pcTopicFilter,EventGroupHandle_t xMqttEventGroup);
 	static EventBits_t prvWaitForEvent( EventGroupHandle_t xMqttEventGroup,EventBits_t uxBitsToWaitFor );
 	static void prvPublishCommandCallback( MQTTAgentCommandContext_t * pxCommandContext,MQTTAgentReturnInfo_t * pxReturnInfo );
+	static void prvSubscribeCommandCallback( MQTTAgentCommandContext_t * pxCommandContext,MQTTAgentReturnInfo_t * pxReturnInfo );
+	static void prvIncomingPublishCallback( void * pvIncomingPublishCallbackContext,MQTTPublishInfo_t * pxPublishInfo );
+	uint8_t* extractMessage(const uint8_t* jsonInput);
+	LoraManager* lora;
+	bool sendHelloMessage;
 public:
 	WIFI();
 	~WIFI();
 	void init();
-	void MQTTpublish(int temp, int ah,int sh,int ws,int rn);
+	void MQTTpublish(int temp, int ah,int sh,int ws,int rn, int b1, int b2);
+	void MQTTpublishText(uint8_t* number, uint8_t* text, int size);
+	void MQTTreceive();
+	void MQTTsubscribe();
+	void setLoraManager(LoraManager* l);
+	void setHelloMessage(bool hello);
 };
 
 #endif /* MAIN_WIFI_H_ */

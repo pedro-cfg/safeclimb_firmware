@@ -23,6 +23,8 @@ public:
     void receiveData();
     bool dataReceived();
     std::string getData();
+    bool getTelephoneBool();
+    void setTelephoneBool(bool tel);
 };
 
 #endif // BLUETOOTH_MANAGER_H

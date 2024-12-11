@@ -23,6 +23,7 @@ extern "C" {
 #endif
 
 extern char global_data[1024];
+extern bool connected;
 extern uint8_t new_data;
 void update_and_notify_data(const uint8_t* value, int size);
 void Bluetooth_Init();

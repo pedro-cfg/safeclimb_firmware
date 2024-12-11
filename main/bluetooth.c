@@ -35,6 +35,7 @@ static void gatts_profile_a_event_handler(esp_gatts_cb_event_t event, esp_gatt_i
 
 #define PREPARE_BUF_MAX_SIZE 1024
 
+bool connected = false;
 char global_data[1024];
 int position = 0;
 uint8_t new_data = 0;
@@ -417,6 +418,7 @@ static void gatts_profile_a_event_handler(esp_gatts_cb_event_t event, esp_gatt_i
 	    case ESP_GATTS_STOP_EVT:
 	        break;
 	    case ESP_GATTS_CONNECT_EVT: {
+			connected = true;
 	        esp_ble_conn_update_params_t conn_params = {0};
 	        memcpy(conn_params.bda, param->connect.remote_bda, sizeof(esp_bd_addr_t));
 	        /* For the IOS system, please reference the apple official documents about the ble connection parameters restrictions. */
@@ -434,6 +436,7 @@ static void gatts_profile_a_event_handler(esp_gatts_cb_event_t event, esp_gatt_i
 	        break;
 	    }
 	    case ESP_GATTS_DISCONNECT_EVT:
+	    	connected = false;
 	        ESP_LOGI(GATTS_TAG, "ESP_GATTS_DISCONNECT_EVT, disconnect reason 0x%x", param->disconnect.reason);
 	        esp_ble_gap_start_advertising(&adv_params);
 	        break;

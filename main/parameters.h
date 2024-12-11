@@ -2,17 +2,19 @@
 #define SLEEP_TIME 300
 #define BUTTON_GPIO GPIO_NUM_2
 
-#define CODING_RATE 7
+#define CODING_RATE 8
 #define BANDWIDTH 7
 #define SPREAD_FACTOR 12
 
 #define BLUETOOTH_TIMEOUT 600
-#define GLOBAL_TIMEOUT 60
+#define GLOBAL_TIMEOUT 120
 #define LOCAL_TIMEOUT 10
 
-#define TOWER_NUMBER 0
-#define MAIN_TOWER 0
-#define SERVER_TOWER 1
+#define TOWER_NUMBER 2
+#define MAIN_TOWER 1
+#define SERVER_TOWER 0
 
-#define BYTE_TIME 70
+#define BYTE_TIME 100
 #define EXTRA_TIME 1000
+
+#define LORA_BYTES 20

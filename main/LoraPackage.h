@@ -23,6 +23,8 @@ private:
 	int soil_humidity;
 	int wind_speed;
 	int rain;
+	int battery1;
+	int battery2;
 	uint8_t isText;
 	uint8_t isInfo;
 	uint8_t iskeepAlive;
@@ -34,7 +36,7 @@ public:
     LoraPackage();
     ~LoraPackage();
 	void setPackage(uint8_t* pck, int size);
-	void setPayload(uint8_t* pay, int size, int destiny, int sender, bool ka = false, bool info = false, bool txt = true, int temp = 0, int ah = 0,int sh = 0,int ws = 0,int rn = 0);
+	void setPayload(uint8_t* pay, int size, int destiny, int sender, bool ka = false, bool info = false, int txt = 1, int temp = 0, int ah = 0,int sh = 0,int ws = 0,int rn = 0,int b1 = 0, int b2 = 0);
 	uint8_t* getPackage();
 	int getPackageSize();
 	uint8_t* getPayload();
@@ -52,7 +54,11 @@ public:
 	int getRain();
 	int getIsInfo();
 	int getIsText();
+	void setIsText(int text);
 	int getKeepAlive();
+	int getBatt1();
+	int getBatt2();
+	void setBattery2(int batt);
 };
 
 #endif 

@@ -12,6 +12,7 @@
 #include "parameters.h"
 #include "LoraPackage.h"
 #include "WIFI.h"
+#include "BluetoothManager.h"
 
 class LoraManager {
 private:
@@ -36,7 +37,11 @@ private:
 	bool transmitting;
 	int bluetooth_tower;
 	bool data_bluetooth;
+	bool higher_order;
 	WIFI* wifi;
+	BluetoothManager* bluetooth;
+	
+	uint8_t telephone[15];
 	
 	LoraPackage actualPackage;
 	LoraPackage receivedPackage;
@@ -53,23 +58,31 @@ private:
 	void changeState(State s);
 	const char* stateToString(State s);
 	void consumeInfo();
+	uint8_t* formatPhoneNumber(const uint8_t* input);
+	char message[256];
+	size_t transmission;
+	int repeaterBattery;
 
 public:
     LoraManager();
     ~LoraManager();
     void init(WIFI* w);
+    void setBluetoothManager(BluetoothManager* b);
     void exec();
     void setInitialTime(struct timeval time);
-    void sendPackage(uint8_t* pck, int size, int destiny, bool txt = true, bool ka = false, int temp = 0, int ah = 0,int sh = 0,int ws = 0,int rn = 0);
+    void sendPackage(uint8_t* pck, int size, int destiny, int txt = 1, bool ka = false, int temp = 0, int ah = 0,int sh = 0,int ws = 0,int rn = 0, int b1 = 0, int b2 = 0);
     void receivePackage();
     bool getTransmitting();
+    void setTransmitting(bool transm);
     void setKeepAlive(bool ka);
     bool getMessageBluetoothReady();
     uint8_t* getMessageBluetooth();
     int getMessageBluetoothSize();
     int getBluetoothTower();
+    void setHigherOrder(bool higher);
+    void setRepeaterBattery(int batt);
     
-    bool teste;
+//    bool teste;
 };
 
 #endif 

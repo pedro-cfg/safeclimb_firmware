@@ -45,20 +45,26 @@ void BluetoothManager::sendData(const uint8_t* data, int size)
 
 extern "C" void BluetoothManager::receiveData()
 {
-	if(new_data)
+	if (new_data)
 	{
-		new_data = 0;
-		data_received = true;
-//		if(!telephone_set)
-//		{
-//			memcpy(telephone, global_data, 15);
-//			//printf("Telephone: %s",telephone);
-//			telephone_set = true;
-//		}
-		//printf("Recebido: \n%s\n", global_data);
-		data = global_data;	
-		//snprintf(global_data, sizeof(global_data), "%s", "");
-	}    
+	    new_data = 0;
+	    data_received = true;
+	
+	    if (global_data[0] == '5' && global_data[1] == '5')
+	    {
+	        memcpy(telephone, global_data + 2, sizeof(telephone) - 1);
+	        telephone[sizeof(telephone) - 1] = '\0';
+	        printf("Telephone (sem 55): %s\n", telephone);
+	        telephone_set = true;
+	        data = (char*)telephone;
+	    }
+	    else
+	    {
+	        data = global_data;
+	    }
+	
+	    
+	} 
 	
 }
 
@@ -73,3 +79,15 @@ std::string BluetoothManager::getData()
 {
 	return data;
 }
+
+bool BluetoothManager::getTelephoneBool()
+{
+	return telephone_set;
+}
+
+void BluetoothManager::setTelephoneBool(bool tel)
+{
+	telephone_set = tel;
+}
+
+    

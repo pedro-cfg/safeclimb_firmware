@@ -15,7 +15,7 @@ LoraPackage::~LoraPackage()
 void LoraPackage::encapsulate()
 {
     int header_size = 6;
-    int sensors_size = isText?0:10;
+    int sensors_size = isText?0:14;
     int sum_size = 2;
     int new_len = payload_size + header_size + sensors_size + sum_size;
 
@@ -44,6 +44,12 @@ void LoraPackage::encapsulate()
 	    
 	    uint8_t* rnPointer = (uint8_t*)&rain;
 	    memcpy(package + header_size + 8, rnPointer, 2);	
+	    
+	    uint8_t* b1Pointer = (uint8_t*)&battery1;
+	    memcpy(package + header_size + 10, b1Pointer, 2);
+	    
+	    uint8_t* b2Pointer = (uint8_t*)&battery2;
+	    memcpy(package + header_size + 12, b2Pointer, 2);
 	}
     
     memcpy(package + header_size + sensors_size, payload, payload_size);
@@ -66,7 +72,7 @@ void LoraPackage::decapsulate()
     iskeepAlive = package[4];
     original_number = package[5];
     
-    int sensors_size = isText?0:10;
+    int sensors_size = isText?0:14;
     
     int new_len = package_size - header_size - sensors_size - sum_size;
 
@@ -93,9 +99,18 @@ void LoraPackage::decapsulate()
 	    uint8_t received_rn[2];
 	    memcpy(received_rn, package + header_size + 8, 2);
 	    rain = (int)((received_rn[1]<<8) | (received_rn[0]));	
+	    
+	    uint8_t received_b1[2];
+	    memcpy(received_b1, package + header_size + 10, 2);
+	    battery1 = (int)((received_b1[1]<<8) | (received_b1[0]));
+	    
+	    uint8_t received_b2[2];
+	    memcpy(received_b2, package + header_size + 12, 2);
+	    battery2 = (int)((received_b2[1]<<8) | (received_b2[0]));
 	}   
 
     memcpy(payload, package + header_size + sensors_size, new_len);
+    printf("\nRECEBIDO PAYLOAD: [%.*s]", new_len,payload);
     
     uint8_t received_sum[2];
     memcpy(received_sum, package + header_size + sensors_size + new_len, 2);
@@ -104,6 +119,7 @@ void LoraPackage::decapsulate()
 
 void LoraPackage::setPackage(uint8_t* pck, int size)
 {
+	printf("Tentando desempacotar!\n");
 	if(size < 1000 && size > 0)
 	{
 		for(int i = 0; i < size; i++)
@@ -114,8 +130,9 @@ void LoraPackage::setPackage(uint8_t* pck, int size)
 	
 }
 
-void LoraPackage::setPayload(uint8_t* pay, int size, int destiny, int sender, bool ka, bool info, bool txt, int temp, int ah,int sh,int ws,int rn)
+void LoraPackage::setPayload(uint8_t* pay, int size, int destiny, int sender, bool ka, bool info, int txt, int temp, int ah,int sh,int ws,int rn,int b1, int b2)
 {
+	printf("ENVIANDO PAYLOAD: [%.*s]", size,pay);
 	if(size < 1000 && size > 0)
 	{
 		for(int i = 0; i < size; i++)
@@ -132,6 +149,8 @@ void LoraPackage::setPayload(uint8_t* pay, int size, int destiny, int sender, bo
 		soil_humidity = sh;
 		wind_speed = ws;
 		rain = rn;
+		battery1 = b1;
+		battery2 = b2;
 		encapsulate();
 	}
 }
@@ -164,6 +183,7 @@ int LoraPackage::getDestinyNumber()
 void LoraPackage::setSenderNumber(int sender)
 {
 	sender_number = sender;
+	encapsulate();
 }
 
 int LoraPackage::getSenderNumber()
@@ -226,7 +246,29 @@ int LoraPackage::getIsText()
 	return isText;
 }
 
+void LoraPackage::setIsText(int text)
+{
+	isText = text;
+	encapsulate();
+}
+
 int LoraPackage::getKeepAlive()
 {
 	return iskeepAlive;
+}
+
+int LoraPackage::getBatt1()
+{
+	return battery1;
+}
+
+int LoraPackage::getBatt2()
+{
+	return battery2;
+}
+
+void LoraPackage::setBattery2(int batt)
+{
+	battery2 = batt;
+	encapsulate();
 }

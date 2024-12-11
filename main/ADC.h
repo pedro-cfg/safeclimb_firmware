@@ -13,7 +13,8 @@ private:
 	int rain;
 	int soil;
 	int wind;
-	int batt;
+	int batt1;
+	int batt2;
 	
 	int mv_output;
 public:
@@ -22,7 +23,8 @@ public:
 	int measure_rain();
 	int measure_soil();
 	int measure_wind();
-	int measure_batt();
+	int measure_batt1();
+	int measure_batt2();
 };
 
 #endif

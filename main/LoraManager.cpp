@@ -1,5 +1,6 @@
 #include "LoraManager.h"
 #include "driver/rtc_io.h"
+#include "esp_system.h"
 #include "esp_task_wdt.h"
 #include <cstring>
 
@@ -11,7 +12,10 @@ LoraManager::LoraManager()
 	LoraPackage newPackage;
 	keepAlive = false;
 	data_bluetooth = false;
-	teste = false;
+	higher_order = false;
+	transmission = 0;
+	repeaterBattery = 0;
+//	teste = false;
 }
 
 LoraManager::~LoraManager()
@@ -40,6 +44,7 @@ void LoraManager::init(WIFI* w)
 
 void LoraManager::exec()
 {
+	higher_order = false;
     gettimeofday(&now, NULL);
     
     if(keepAlive)
@@ -47,18 +52,17 @@ void LoraManager::exec()
 		if((int)(now.tv_sec) - (int)(initial_time.tv_sec) >= BLUETOOTH_TIMEOUT)
 	    {
 			setKeepAlive(false);
-			if(state != Receive_Payload_)
-				Sleep();
+			Sleep();
 		}
 	}
     else if((int)(now.tv_sec) - (int)(initial_time.tv_sec) >= GLOBAL_TIMEOUT)
     {
 		if(state == Receive_Return_Confirm_ || state == Receive_Return_ || state == Send_Return_)
 		{
-			if(actualPackage.getDestinyNumber() == tower_number)
-			{
-				consumeInfo();
-			}
+//			if(actualPackage.getDestinyNumber() == tower_number)
+//			{
+//				consumeInfo();
+//			}
 		}
 		if(state != Receive_Payload_)
 			Sleep();
@@ -94,9 +98,11 @@ void LoraManager::exec()
 
 void LoraManager::Send_Payload()
 {
+	lora_idle();
+	vTaskDelay(100 / portTICK_PERIOD_MS);
 	lora_send_packet(actualPackage.getPackage(), actualPackage.getPackageSize());
 	
-	int package_time = actualPackage.getPackageSize() * BYTE_TIME + EXTRA_TIME;
+	int package_time = actualPackage.getPackageSize() * BYTE_TIME;
 	vTaskDelay(package_time / portTICK_PERIOD_MS);
     
     gettimeofday(&now, NULL);
@@ -107,6 +113,8 @@ void LoraManager::Send_Payload()
 
 void LoraManager::Send_Confirm_Primary()
 {
+	lora_idle();
+	vTaskDelay(100 / portTICK_PERIOD_MS);
 	newPackage.setPayload((uint8_t*)"OK",3,actualPackage.getDestinyNumber(),tower_number);
 	lora_send_packet(newPackage.getPackage(), newPackage.getPackageSize());
 	
@@ -119,6 +127,7 @@ void LoraManager::Send_Confirm_Primary()
 
 	if(actualPackage.getDestinyNumber() == tower_number)
 	{
+		//vTaskDelay(1500 / portTICK_PERIOD_MS);
 		changeState(Send_Return_);
 		printf("Package received at destiny. Sending confirmation...");
 		//consumeInfo();
@@ -131,6 +140,8 @@ void LoraManager::Send_Confirm_Primary()
 
 void LoraManager::Send_Return()
 {
+	lora_idle();
+	vTaskDelay(100 / portTICK_PERIOD_MS);
 	newPackage.setPayload((uint8_t*)"R",2,actualPackage.getDestinyNumber(),tower_number);
 	lora_send_packet(newPackage.getPackage(), newPackage.getPackageSize());
 	
@@ -150,30 +161,39 @@ void LoraManager::Receive_Payload()
 	if (lora_received()) {
 		int rxLen = lora_receive_packet(buf, sizeof(buf));
 		actualPackage.setPackage(buf,rxLen);
-		ESP_LOGI("RECEIVE_1:", "%d byte packet received:[%.*s]", actualPackage.getPayloadSize(), actualPackage.getPayloadSize(), actualPackage.getPayload());
-		
-		int received_sum = actualPackage.getSum();
-		actualPackage.calculateSum();
-		int calculated_sum = actualPackage.getSum();
-		printf("Received: %d, Calculated: %d\n",received_sum,calculated_sum);
-		
-		if(received_sum == calculated_sum)
+		ESP_LOGI("RECEIVE_1:", "%d byte packet received:[%.*s] from tower %d", actualPackage.getPayloadSize(), actualPackage.getPayloadSize(), actualPackage.getPayload(),actualPackage.getSenderNumber());
+		if(sender && actualPackage.getSenderNumber() > tower_number && actualPackage.getDestinyNumber() <= tower_number)
 		{
-			if(actualPackage.getKeepAlive())
-				setKeepAlive(actualPackage.getKeepAlive());
-			if(actualPackage.getIsInfo())
-			{
-				int package_time = (actualPackage.getPackageSize() * BYTE_TIME + EXTRA_TIME);
-				vTaskDelay(package_time / portTICK_PERIOD_MS);
-				
-				changeState(Send_Confirm_Primary_);
-				actualPackage.setSenderNumber(tower_number);
-				
-				transmitting = true;
-				gettimeofday(&now, NULL);
-				setInitialTime(now);	
-			}
+			printf("Invalid transmission\n");
+		}		
+		else if((actualPackage.getDestinyNumber() <= tower_number && actualPackage.getSenderNumber() == tower_number + 1) || (actualPackage.getDestinyNumber() >= tower_number && actualPackage.getSenderNumber() == tower_number - 1))
+		{
+		
+			int received_sum = actualPackage.getSum();
+			actualPackage.calculateSum();
+			int calculated_sum = actualPackage.getSum();
+			printf("Received: %d, Calculated: %d\n",received_sum,calculated_sum);
 			
+			if(received_sum == calculated_sum)
+			{
+				if(actualPackage.getKeepAlive())
+					setKeepAlive(actualPackage.getKeepAlive());
+				if(actualPackage.getIsInfo())
+				{
+					if(!actualPackage.getIsText() && repeaterBattery != 0)
+						actualPackage.setBattery2(repeaterBattery);
+					int package_time = (actualPackage.getPackageSize() * BYTE_TIME + EXTRA_TIME)*0.8;
+					vTaskDelay(package_time / portTICK_PERIOD_MS);
+					
+					changeState(Send_Confirm_Primary_);
+					actualPackage.setSenderNumber(tower_number);
+					
+					transmitting = true;
+					gettimeofday(&now, NULL);
+					setInitialTime(now);	
+				}
+				
+			}
 		}
 		
 		//		rssi = lora_packet_rssi();
@@ -187,25 +207,29 @@ void LoraManager::Receive_Payload()
 void LoraManager::Receive_Confirm_Primary()
 {
 	lora_receive();
-    gettimeofday(&now, NULL);
+    
 	if (lora_received()) {
+		gettimeofday(&now, NULL);
 		int rxLen = lora_receive_packet(buf, sizeof(buf));
 		receivedPackage.setPackage(buf,rxLen);
-		ESP_LOGI("Receive_Confirm_Primary:", "%d byte packet received:[%.*s]", receivedPackage.getPayloadSize(), receivedPackage.getPayloadSize(), receivedPackage.getPayload());
-		
-		if((receivedPackage.getDestinyNumber() < tower_number && receivedPackage.getSenderNumber() < tower_number) || (receivedPackage.getDestinyNumber() > tower_number && receivedPackage.getSenderNumber() > tower_number))
+		ESP_LOGI("Receive_Confirm_Primary:", "%d byte packet received:[%.*s] from tower %d", receivedPackage.getPayloadSize(), receivedPackage.getPayloadSize(), receivedPackage.getPayload(), receivedPackage.getSenderNumber());
+		if(sender && actualPackage.getSenderNumber() > tower_number && actualPackage.getDestinyNumber() <= tower_number)
 		{
-			int package_time = (receivedPackage.getPackageSize() * BYTE_TIME + EXTRA_TIME)*0.2;
-			vTaskDelay(package_time / portTICK_PERIOD_MS);
+			printf("Invalid transmission\n");
+		}	
+		else if((receivedPackage.getDestinyNumber() < tower_number && receivedPackage.getSenderNumber() < tower_number) || (receivedPackage.getDestinyNumber() > tower_number && receivedPackage.getSenderNumber() > tower_number))
+		{
+			//int package_time = (receivedPackage.getPackageSize() * BYTE_TIME + EXTRA_TIME)*0.2;
+			//vTaskDelay(package_time / portTICK_PERIOD_MS);
 			
 			if(memcmp(receivedPackage.getPayload(), actualPackage.getPayload(), actualPackage.getPayloadSize()) == 0 || memcmp((uint8_t*)"OK", receivedPackage.getPayload(), receivedPackage.getPayloadSize()) == 0)
 			{
 				changeState(Receive_Return_);
 			}
-			else if(memcmp((uint8_t*)"R", receivedPackage.getPayload(), receivedPackage.getPayloadSize()) == 0)
-			{
-				changeState(Send_Return_);
-			}
+//			else if(memcmp((uint8_t*)"R", receivedPackage.getPayload(), receivedPackage.getPayloadSize()) == 0)
+//			{
+//				changeState(Send_Return_);
+//			}
 		}
 		
 	}
@@ -223,12 +247,16 @@ void LoraManager::Receive_Return()
 		int rxLen = lora_receive_packet(buf, sizeof(buf));
 		receivedPackage.setPackage(buf,rxLen);
 		
-		if((receivedPackage.getDestinyNumber() < tower_number && receivedPackage.getSenderNumber() < tower_number) || (receivedPackage.getDestinyNumber() > tower_number && receivedPackage.getSenderNumber() > tower_number))
+		ESP_LOGI("Receive_Return:", "%d byte packet received:[%.*s] from tower %d", receivedPackage.getPayloadSize(), receivedPackage.getPayloadSize(), receivedPackage.getPayload(), receivedPackage.getSenderNumber());
+		
+		if(sender && actualPackage.getSenderNumber() > tower_number && actualPackage.getDestinyNumber() <= tower_number)
 		{
-			int package_time = (receivedPackage.getPackageSize() * BYTE_TIME + EXTRA_TIME);
+			printf("Invalid transmission\n");
+		}	
+		else if((receivedPackage.getDestinyNumber() <= tower_number && receivedPackage.getSenderNumber() == tower_number - 1) || (receivedPackage.getDestinyNumber() >= tower_number && receivedPackage.getSenderNumber() == tower_number + 1))
+		{
+			int package_time = (receivedPackage.getPackageSize() * BYTE_TIME + EXTRA_TIME)*0.5;
 			vTaskDelay(package_time / portTICK_PERIOD_MS);
-			
-			ESP_LOGI("Receive_Return:", "%d byte packet received:[%.*s]", receivedPackage.getPayloadSize(), receivedPackage.getPayloadSize(), receivedPackage.getPayload());
 			
 			if(memcmp((uint8_t*)"R", receivedPackage.getPayload(), receivedPackage.getPayloadSize()) == 0)
 			{
@@ -253,13 +281,22 @@ void LoraManager::Receive_Return_Confirm()
 		int rxLen = lora_receive_packet(buf, sizeof(buf));
 		receivedPackage.setPackage(buf,rxLen);
 		
-		if((receivedPackage.getDestinyNumber() <= tower_number && receivedPackage.getSenderNumber() > tower_number) || (receivedPackage.getDestinyNumber() >= tower_number && receivedPackage.getSenderNumber() < tower_number))
+		ESP_LOGI("Receive_Return_Confirm:", "%d byte packet received:[%.*s] from tower %d", receivedPackage.getPayloadSize(), receivedPackage.getPayloadSize(), receivedPackage.getPayload(), receivedPackage.getSenderNumber());
+		
+		if(sender && actualPackage.getSenderNumber() > tower_number && actualPackage.getDestinyNumber() <= tower_number)
 		{
-			ESP_LOGI("Receive_Return_Confirm:", "%d byte packet received", rxLen);
-			vTaskDelay(1);
+			printf("Invalid transmission\n");
+		}		
+		else if((receivedPackage.getDestinyNumber() <= tower_number && receivedPackage.getSenderNumber() == tower_number + 1) || (receivedPackage.getDestinyNumber() >= tower_number && receivedPackage.getSenderNumber() == tower_number - 1))
+		{
+
+			int package_time = (receivedPackage.getPackageSize() * BYTE_TIME + EXTRA_TIME)*0.5;
+			vTaskDelay(package_time / portTICK_PERIOD_MS);
+			
 			if(memcmp((uint8_t*)"R", receivedPackage.getPayload(), receivedPackage.getPayloadSize()) == 0)
 			{
-				consumeInfo();
+				if(actualPackage.getDestinyNumber() == tower_number)
+					consumeInfo();
 				Sleep();
 			}
 		}
@@ -277,10 +314,10 @@ void LoraManager::setInitialTime(struct timeval time)
 	initial_time = time;
 }
 
-void LoraManager::sendPackage(uint8_t* pck, int size, int destiny,bool txt, bool ka, int temp, int ah,int sh,int ws,int rn)
+void LoraManager::sendPackage(uint8_t* pck, int size, int destiny,int txt, bool ka, int temp, int ah,int sh,int ws,int rn,int b1, int b2)
 {
 	while(transmitting){}
-	actualPackage.setPayload(pck,size,destiny,tower_number,ka,true,txt,temp,ah,sh,ws,rn);
+	actualPackage.setPayload(pck,size,destiny,tower_number,ka,true,txt,temp,ah,sh,ws,rn,b1,b2);
 	sender = true;
 	transmitting = true;
 	changeState(Send_Payload_);
@@ -307,15 +344,30 @@ void LoraManager::Sleep()
 	{
 		gettimeofday(&now, NULL);
 		setInitialTime(now);
-		changeState(Receive_Payload_);
+//		if(MAIN_TOWER && !keepAlive)
+//		{
+//			vTaskDelay(300000 / portTICK_PERIOD_MS);
+//			esp_restart();
+//		}
+//		else
+//		{
+			changeState(Receive_Payload_);
+			Receive_Payload();
+//		}
+			
 	}
 	
 }
 
 void LoraManager::changeState(State s)
 {
-	state = s;
-    ESP_LOGI("LORA", "Changing state: %s", stateToString(s));
+//	if(!higher_order)
+//	{
+		state = s;
+    	ESP_LOGI("LORA", "Changing state: %s", stateToString(s));
+//	}
+//	else
+//		ESP_LOGI("LORA", "State: %s not changed because of higher priority order", stateToString(s));
 }
 
 const char* LoraManager::stateToString(State s)
@@ -347,25 +399,65 @@ void LoraManager::setKeepAlive(bool ka)
 		setInitialTime(now);
 	}
 	else
+	{
 		printf("OFF!\n");
+	}
 	keepAlive = ka;
 }
 
 void LoraManager::consumeInfo()
 {
 	if(actualPackage.getIsText())
-	{
+	{	
 		printf("Mensagem recebida: [%.*s]\n", actualPackage.getPayloadSize(),actualPackage.getPayload());
 		if(SERVER_TOWER)
 		{
 			bluetooth_tower = actualPackage.getOriginalNumber();
-			//printf("Enviando mensagem para a torre %d",bluetooth_tower);
-			//Código para mandar para o twilio
-			teste = true;
+			if(actualPackage.getIsText() == 2)
+			{
+				uint8_t* formatted = formatPhoneNumber(actualPackage.getPayload());
+				size_t formattedLength = strlen((char*)formatted);
+				memcpy(telephone, formatted, formattedLength + 1);
+				printf("Telephone: %s",telephone);
+				wifi->setHelloMessage(true);
+			}
+			else if(actualPackage.getIsText() == 3)
+			{
+				snprintf(message+transmission,actualPackage.getPayloadSize()+1,"%s",actualPackage.getPayload());
+				transmission += actualPackage.getPayloadSize();
+				
+				wifi->MQTTpublishText(telephone, (uint8_t*)message,sizeof(message));
+				
+				memset(message, 0, sizeof(message));
+            	transmission = 0;
+			}
+			else if(actualPackage.getIsText() == 1)
+			{
+				snprintf(message+transmission,actualPackage.getPayloadSize()+1,"%s",actualPackage.getPayload());
+				transmission += actualPackage.getPayloadSize();
+			}
+			//teste = true;
 		}
 		else
 		{
-			data_bluetooth = true;
+			if (actualPackage.getIsText() == 3) {
+			    printf("Última transmissão!\n");
+			
+		        snprintf(message + transmission, actualPackage.getPayloadSize() + 1, "%s", actualPackage.getPayload());
+		        transmission += actualPackage.getPayloadSize();
+		
+		        bluetooth->sendData((uint8_t*)message, transmission);
+		
+		        memset(message, 0, sizeof(message));
+		        transmission = 0;
+			    
+			} else if (actualPackage.getIsText() == 1) {
+			    printf("Apenas concatenando\n");
+		        snprintf(message + transmission, actualPackage.getPayloadSize() + 1, "%s", actualPackage.getPayload());
+		        transmission += actualPackage.getPayloadSize();
+
+			}
+			
 			//Enviar para smartphone
 		}
 	}
@@ -376,8 +468,10 @@ void LoraManager::consumeInfo()
 		printf("SOIL HUMIDITY: %d\n", actualPackage.getSoilHumidity());
 		printf("WIND SPEED: %d\n", actualPackage.getWindSpeed());
 		printf("RAIN: %d\n", actualPackage.getRain());	
+		printf("BATTERY MAIN: %d\n", actualPackage.getBatt1());	
+		printf("BATTERY REPEATER: %d\n", actualPackage.getBatt2());	
 		printf("Mensagem recebida: [%.*s]\n", actualPackage.getPayloadSize(),actualPackage.getPayload());
-		wifi->MQTTpublish(actualPackage.getTemperature(),actualPackage.getAirHumidity(),actualPackage.getSoilHumidity(),actualPackage.getWindSpeed(),actualPackage.getRain());
+		wifi->MQTTpublish(actualPackage.getTemperature(),actualPackage.getAirHumidity(),actualPackage.getSoilHumidity(),actualPackage.getWindSpeed(),actualPackage.getRain(), actualPackage.getBatt1(), actualPackage.getBatt2());
 	}
 				
 }
@@ -407,3 +501,42 @@ int LoraManager::getBluetoothTower()
 	return bluetooth_tower;
 }
 
+uint8_t* LoraManager::formatPhoneNumber(const uint8_t* input) {
+
+    uint8_t* result = new uint8_t[15]; 
+    std::size_t index = 0;
+
+    result[index++] = '+';
+    result[index++] = '5';
+    result[index++] = '5';
+
+    for (std::size_t i = 0; input[i] != '\0'; ++i) {
+        if (std::isdigit(input[i])) { 
+            result[index++] = input[i];
+        }
+    }
+
+    result[index] = '\0';
+
+    return result;
+}
+
+void LoraManager::setBluetoothManager(BluetoothManager* b)
+{
+	bluetooth = b;
+}
+
+void LoraManager::setTransmitting(bool transm)
+{
+	transmitting = transm;
+}
+
+void LoraManager::setHigherOrder(bool higher)
+{
+	higher_order = higher;
+}
+
+void LoraManager::setRepeaterBattery(int batt)
+{
+	repeaterBattery = batt;
+}
