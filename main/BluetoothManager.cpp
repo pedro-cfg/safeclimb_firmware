@@ -27,21 +27,24 @@ void BluetoothManager::turnOff()
 
 void BluetoothManager::sendData(const uint8_t* data, int size)
 {
-	const int max_chunk_size = 20; 
-    int offset = 0; 
+    const int max_chunk_size = 20;
+    int offset = 0;
 
     while (offset < size) {
         int chunk_size = std::min(max_chunk_size, size - offset);
         uint8_t str[max_chunk_size];
-        for(int i = 0;i<chunk_size;i++)
-        {
-			str[i] = data[offset+i];
-		}
+        for(int i = 0; i < chunk_size; i++) {
+            str[i] = data[offset + i];
+        }
         update_and_notify_data(str, chunk_size);
         offset += chunk_size;
         vTaskDelay(10 / portTICK_PERIOD_MS);
     }
+
+    uint8_t null_terminator[1] = { '\0' };
+    update_and_notify_data(null_terminator, 1);
 }
+
 
 extern "C" void BluetoothManager::receiveData()
 {

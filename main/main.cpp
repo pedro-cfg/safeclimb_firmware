@@ -99,9 +99,10 @@ void thread_LoRa(void *pvParameters)
     
 	if(main_tower && !bluetooth_comm)
     {
+//		while(1){
 		temp = temperature();
 		printf("\n\nTemperature: %.1f C \n", (float)temp/10.0);
-		vTaskDelay(1000/portTICK_PERIOD_MS);
+		vTaskDelay(2000/portTICK_PERIOD_MS);
 		printf("\nDTH11 sensor:\n");
 		if(!dht11_read(&dht11_sensor, CONFIG_CONNECTION_TIMEOUT))
 		{  
@@ -113,7 +114,7 @@ void thread_LoRa(void *pvParameters)
 		vTaskDelay(100/portTICK_PERIOD_MS);
 		printf("\nSoil_sensor read...\n");
 		soil_humidity = adc.measure_soil();
-		soil_humidity = (int)(-100.0f*((float)soil_humidity - 2250.0f)/1243.0f);
+		soil_humidity = (int)(-100.0f*((float)soil_humidity - 2172.0f)/1183.0f);
 		if(soil_humidity > 100)
 			soil_humidity = 100;
 		else if(soil_humidity < 0)
@@ -122,7 +123,7 @@ void thread_LoRa(void *pvParameters)
 		vTaskDelay(100/portTICK_PERIOD_MS);
 		printf("\nRain_sensor read...\n");
 		rain = adc.measure_rain();
-		rain = (int)(-100.0f*((float)rain - 3165.0f)/1665.0f);
+		rain = (int)(-100.0f*((float)rain - 3165.0f)/1668.0f);
 		if(rain > 100)
 			rain = 100;
 		else if(rain < 0)
@@ -131,13 +132,14 @@ void thread_LoRa(void *pvParameters)
 		vTaskDelay(100/portTICK_PERIOD_MS);
 		printf("\nWind sensor:\n");
 		wind_speed = adc.measure_wind();
-		wind_speed /=20;
+		wind_speed /=10;
 		printf("Voltage: %d km/h \n", wind_speed);
 		vTaskDelay(100/portTICK_PERIOD_MS);
 		printf("\nBatteries:\n");
 		batt1 = adc.measure_batt1();
 		printf("Voltage: %.3f V \n\n", (float)batt1/1000.0);
 		vTaskDelay(100/portTICK_PERIOD_MS);
+//		}
 		int send_len = sprintf((char *)buf,"T");
 		vTaskDelay(500 / portTICK_PERIOD_MS);
 		loraManager.sendPackage(buf, send_len, 0,false,false,temp,air_humidity,soil_humidity,wind_speed,rain,batt1,batt2);

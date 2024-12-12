@@ -162,7 +162,7 @@ void LoraManager::Receive_Payload()
 		int rxLen = lora_receive_packet(buf, sizeof(buf));
 		actualPackage.setPackage(buf,rxLen);
 		ESP_LOGI("RECEIVE_1:", "%d byte packet received:[%.*s] from tower %d", actualPackage.getPayloadSize(), actualPackage.getPayloadSize(), actualPackage.getPayload(),actualPackage.getSenderNumber());
-		if(sender && actualPackage.getSenderNumber() > tower_number && actualPackage.getDestinyNumber() <= tower_number)
+		if(transmitting || (sender && actualPackage.getSenderNumber() > tower_number && actualPackage.getDestinyNumber() <= tower_number))
 		{
 			printf("Invalid transmission\n");
 		}		
@@ -217,7 +217,7 @@ void LoraManager::Receive_Confirm_Primary()
 		{
 			printf("Invalid transmission\n");
 		}	
-		else if((receivedPackage.getDestinyNumber() < tower_number && receivedPackage.getSenderNumber() < tower_number) || (receivedPackage.getDestinyNumber() > tower_number && receivedPackage.getSenderNumber() > tower_number))
+		else if((receivedPackage.getDestinyNumber() < tower_number && receivedPackage.getSenderNumber() == tower_number - 1) || (receivedPackage.getDestinyNumber() > tower_number && receivedPackage.getSenderNumber() == tower_number + 1))
 		{
 			//int package_time = (receivedPackage.getPackageSize() * BYTE_TIME + EXTRA_TIME)*0.2;
 			//vTaskDelay(package_time / portTICK_PERIOD_MS);
@@ -226,10 +226,10 @@ void LoraManager::Receive_Confirm_Primary()
 			{
 				changeState(Receive_Return_);
 			}
-//			else if(memcmp((uint8_t*)"R", receivedPackage.getPayload(), receivedPackage.getPayloadSize()) == 0)
-//			{
-//				changeState(Send_Return_);
-//			}
+			else if(memcmp((uint8_t*)"R", receivedPackage.getPayload(), receivedPackage.getPayloadSize()) == 0)
+			{
+				changeState(Send_Return_);
+			}
 		}
 		
 	}

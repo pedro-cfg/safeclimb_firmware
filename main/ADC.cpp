@@ -38,9 +38,14 @@ ADC::ADC()
 		.bitwidth = ADC_BITWIDTH_DEFAULT
 	};
 	
+	config_wind = {
+		.atten = ADC_ATTEN_DB_0,
+		.bitwidth = ADC_BITWIDTH_DEFAULT
+	};
+	
 	ESP_ERROR_CHECK(adc_oneshot_config_channel(handle, ADC_CHANNEL_RAIN, &config));
 	ESP_ERROR_CHECK(adc_oneshot_config_channel(handle, ADC_CHANNEL_SOIL, &config));
-	ESP_ERROR_CHECK(adc_oneshot_config_channel(handle, ADC_CHANNEL_WIND, &config));
+	ESP_ERROR_CHECK(adc_oneshot_config_channel(handle, ADC_CHANNEL_WIND, &config_wind));
 	ESP_ERROR_CHECK(adc_oneshot_config_channel(handle, ADC_CHANNEL_BATT1, &config));
 	ESP_ERROR_CHECK(adc_oneshot_config_channel(handle, ADC_CHANNEL_BATT2, &config));
 	
@@ -53,8 +58,14 @@ ADC::ADC()
 	.bitwidth = ADC_BITWIDTH_DEFAULT,
 	};
 	
+	cali_config_wind = {
+	.unit_id = ADC_UNIT_1,
+	.atten = ADC_ATTEN_DB_0,
+	.bitwidth = ADC_BITWIDTH_DEFAULT,
+	};
 	
 	ESP_ERROR_CHECK(adc_cali_create_scheme_line_fitting(&cali_config, &cali_handle));
+	ESP_ERROR_CHECK(adc_cali_create_scheme_line_fitting(&cali_config_wind, &cali_handle_wind));
 	gpio_set_direction(ENABLE_PIN1, GPIO_MODE_OUTPUT);
 	if(!SERVER_TOWER && !MAIN_TOWER)
 		gpio_set_direction(ENABLE_PIN2, GPIO_MODE_OUTPUT);
@@ -84,9 +95,9 @@ int ADC::measure_soil()
 int ADC::measure_wind()
 {
 	ESP_ERROR_CHECK(adc_oneshot_read(handle, ADC_CHANNEL_WIND, &wind));
-	adc_cali_raw_to_voltage(cali_handle, wind, &mv_output);
+	adc_cali_raw_to_voltage(cali_handle_wind, wind, &mv_output);
 	vTaskDelay(20 / portTICK_PERIOD_MS);
-	return mv_output -142;
+	return mv_output -75;
 }
 
 int ADC::measure_batt1()
