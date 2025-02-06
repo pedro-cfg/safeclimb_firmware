@@ -79,4 +79,4 @@ source "/home/pedro/ESP_IDE/safeclimb/components/esp-aws-iot/libraries/coreHTTP/
 source "/home/pedro/ESP_IDE/safeclimb/components/esp-aws-iot/libraries/coreMQTT/Kconfig"
 source "/home/pedro/ESP_IDE/safeclimb/components/esp-aws-iot/libraries/coreMQTT-Agent/Kconfig"
 source "/home/pedro/ESP_IDE/safeclimb/components/esp-aws-iot/libraries/corePKCS11/Kconfig"
-source "/home/pedro/ESP_IDE/safeclimb/managed_components/espressif__esp_secure_cert_mgr/Kconfig"
+source "/home/pedro/ESP_IDE/safeclimb/components/espressif__esp_secure_cert_mgr/Kconfig"

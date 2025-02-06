@@ -40,6 +40,7 @@ private:
 	bool higher_order;
 	WIFI* wifi;
 	BluetoothManager* bluetooth;
+	int timeout;
 	
 	uint8_t telephone[15];
 	
@@ -81,6 +82,7 @@ public:
     int getBluetoothTower();
     void setHigherOrder(bool higher);
     void setRepeaterBattery(int batt);
+    void interrupt();
     
 //    bool teste;
 };

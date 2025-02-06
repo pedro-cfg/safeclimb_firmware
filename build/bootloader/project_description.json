@@ -19,7 +19,7 @@
     "phy_data_partition": "",
     "monitor_baud" :      "115200",
     "monitor_toolprefix": "xtensa-esp32-elf-",
-    "c_compiler":         "/home/pedro/.espressif/tools/xtensa-esp-elf/esp-13.2.0_20240530/xtensa-esp-elf/bin/xtensa-esp32-elf-gcc",
+    "c_compiler":         "/root/.espressif/tools/xtensa-esp-elf/esp-13.2.0_20240530/xtensa-esp-elf/bin/xtensa-esp32-elf-gcc",
     "config_environment" : {
         "COMPONENT_KCONFIGS" : "/home/pedro/Documentos/ESP_IDE/esp-idf-v5.3.1/components/efuse/Kconfig;/home/pedro/Documentos/ESP_IDE/esp-idf-v5.3.1/components/esp_common/Kconfig;/home/pedro/Documentos/ESP_IDE/esp-idf-v5.3.1/components/esp_hw_support/Kconfig;/home/pedro/Documentos/ESP_IDE/esp-idf-v5.3.1/components/esp_system/Kconfig;/home/pedro/Documentos/ESP_IDE/esp-idf-v5.3.1/components/freertos/Kconfig;/home/pedro/Documentos/ESP_IDE/esp-idf-v5.3.1/components/hal/Kconfig;/home/pedro/Documentos/ESP_IDE/esp-idf-v5.3.1/components/log/Kconfig;/home/pedro/Documentos/ESP_IDE/esp-idf-v5.3.1/components/newlib/Kconfig;/home/pedro/Documentos/ESP_IDE/esp-idf-v5.3.1/components/soc/Kconfig;/home/pedro/Documentos/ESP_IDE/esp-idf-v5.3.1/components/spi_flash/Kconfig",
         "COMPONENT_KCONFIGS_PROJBUILD" : "/home/pedro/Documentos/ESP_IDE/esp-idf-v5.3.1/components/bootloader/Kconfig.projbuild;/home/pedro/Documentos/ESP_IDE/esp-idf-v5.3.1/components/esp_app_format/Kconfig.projbuild;/home/pedro/Documentos/ESP_IDE/esp-idf-v5.3.1/components/esp_rom/Kconfig.projbuild;/home/pedro/Documentos/ESP_IDE/esp-idf-v5.3.1/components/esptool_py/Kconfig.projbuild;/home/pedro/Documentos/ESP_IDE/esp-idf-v5.3.1/components/partition_table/Kconfig.projbuild"

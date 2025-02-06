@@ -654,6 +654,7 @@ void WIFI::MQTTreceive()
 	        size_t diff = (messageLength - ind) > LORA_BYTES ? LORA_BYTES : (messageLength - ind);
 	        uint8_t bufSec[LORA_BYTES]; 
 	        memcpy(bufSec, message + ind, diff);
+	        lora->setHigherOrder(true);
 	        if(diff < LORA_BYTES)
 	        	lora->sendPackage(bufSec, diff, lora->getBluetoothTower(), 3, true);
 	        else

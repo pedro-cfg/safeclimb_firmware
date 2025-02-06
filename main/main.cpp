@@ -54,6 +54,7 @@ static void IRAM_ATTR gpio_interrupt_handler(void *args)
 	bluetooth_comm = true;
 	//loraManager.setTransmitting(false);
 	xTaskNotifyGive(xHandleBluetooth);
+	loraManager.interrupt();
 }
 
 static void deep_sleep_register_rtc_timer_wakeup(void)
@@ -197,7 +198,7 @@ void thread_Bluetooth(void *pvParameters)
 			if(btManager.getTelephoneBool())
     		{
 				loraManager.sendPackage(buf, send_len, 0,2,true);
-				//loraManager.setHigherOrder(true);
+				loraManager.setHigherOrder(true);
 				btManager.setTelephoneBool(false);
 			}
 			else
@@ -221,7 +222,7 @@ void thread_Bluetooth(void *pvParameters)
 				{
 				    loraManager.sendPackage(buf, send_len, 0, 3, true);
 				}
-				//loraManager.setHigherOrder(true);
+				loraManager.setHigherOrder(true);
 			}
 		}
 		
@@ -259,6 +260,7 @@ void thread_Wifi(void *pvParameters)
 
 extern "C" void app_main()
 {	    
+	printf("TESTE!!!!");
     //Configure DeepSleep
     deep_sleep_register_rtc_timer_wakeup();
     deep_sleep_register_ext0_wakeup();

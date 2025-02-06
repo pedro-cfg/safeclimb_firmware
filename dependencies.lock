@@ -27,7 +27,6 @@ dependencies:
     component_hash: 440f4ee4504841cc9b4f3a8ef755776a612ac9dace355514c68b999868f990ff
     dependencies:
     - name: idf
-      registry_url: https://components.espressif.com
       require: private
       version: '>=4.3'
     source:
@@ -35,21 +34,15 @@ dependencies:
       type: service
     version: 0.6.0~1
   espressif/esp_secure_cert_mgr:
-    component_hash: 5d9175b416f751ba6a7cb35bdf092f0af85658ce06c4a592c7c541d8017ebeb9
-    dependencies:
-    - name: idf
-      registry_url: https://components.espressif.com
-      require: private
-      version: '>=4.3'
+    dependencies: []
     source:
-      registry_url: https://components.espressif.com/
-      type: service
+      path: /home/pedro/ESP_IDE/safeclimb/components/espressif__esp_secure_cert_mgr
+      type: local
     version: 2.5.0
   espressif/led_strip:
     component_hash: 28c6509a727ef74925b372ed404772aeedf11cce10b78c3f69b3c66799095e2d
     dependencies:
     - name: idf
-      registry_url: https://components.espressif.com
       require: private
       version: '>=4.4'
     source:
@@ -92,10 +85,11 @@ direct_dependencies:
 - espressif/cbor
 - espressif/esp_secure_cert_mgr
 - espressif/led_strip
+- idf
 - lora
 - mbedtls
 - one-wire
 - temperature
-manifest_hash: e6666a4aec32da10e9e07c3a609c7dd4684f7a7e589542d518588e17dba8646c
+manifest_hash: 1d2050bd8fd1d0a57915e3d8c5b84ab681718e984bba2f84dbfd04450a22e420
 target: esp32
 version: 2.0.0
