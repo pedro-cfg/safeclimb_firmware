@@ -1,5 +1,0 @@
-set(COMPONENT_ADD_INCLUDEDIRS include)
-set(COMPONENT_SRCS "ds18b20.c")
-set(COMPONENT_REQUIRES "driver" "esp_timer")
-set(COMPONENT_PRIV_REQUIRES "one-wire")
-register_component()

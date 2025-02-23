@@ -1,20 +1,14 @@
 dependencies:
-  dht11:
-    dependencies: []
-    source:
-      path: /home/pedro/ESP_IDE/safeclimb/components/dht11
-      type: local
-    version: '*'
   esp_driver_gpio:
     dependencies: []
     source:
-      path: /home/pedro/Documentos/ESP_IDE/esp-idf-v5.3.1/components/esp_driver_gpio
+      path: C:\Espressif\frameworks\esp-idf-v5.3.1\components\esp_driver_gpio
       type: local
     version: '*'
   esp_driver_spi:
     dependencies: []
     source:
-      path: /home/pedro/Documentos/ESP_IDE/esp-idf-v5.3.1/components/esp_driver_spi
+      path: C:\Espressif\frameworks\esp-idf-v5.3.1\components\esp_driver_spi
       type: local
     version: '*'
   espressif/led_strip:
@@ -35,29 +29,14 @@ dependencies:
   lora:
     dependencies: []
     source:
-      path: /home/pedro/ESP_IDE/safeclimb/components/lora
-      type: local
-    version: '*'
-  one-wire:
-    dependencies: []
-    source:
-      path: /home/pedro/ESP_IDE/safeclimb/components/one-wire
-      type: local
-    version: '*'
-  temperature:
-    dependencies: []
-    source:
-      path: /home/pedro/ESP_IDE/safeclimb/components/temperature
+      path: C:\Users\caioc\Documents\UTFPR\UTFPR 2024.2\Oficina 3\safe_climb_workspace\server_firmware\components\lora
       type: local
     version: '*'
 direct_dependencies:
-- dht11
 - esp_driver_gpio
 - esp_driver_spi
 - espressif/led_strip
 - lora
-- one-wire
-- temperature
-manifest_hash: a39418c5e5e16ee004708d8d465036368137c52da9acff67053070bd5d19f41a
+manifest_hash: 949c297a4c04434af22348cb2a519cc21daa5d0bceee1ab8868d0da734ee983b
 target: esp32
 version: 2.0.0

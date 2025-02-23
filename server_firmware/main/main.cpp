@@ -17,16 +17,11 @@
 #include "driver/spi_master.h"
 #include "rom/gpio.h"
 #include "sdkconfig.h"
-#include "esp32-dht11.h"
 
 #include "parameters.h"
 #include "BluetoothManager.h"
-#include "Temperature.h"
 #include "LoraManager.h"
 #include "ADC.h"
-
-#define CONFIG_DHT11_PIN GPIO_NUM_17
-#define CONFIG_CONNECTION_TIMEOUT 5
 
 #define BUTTON_PIN GPIO_NUM_27
 
@@ -68,75 +63,75 @@ void deep_sleep_register_ext0_wakeup(void)
     ESP_ERROR_CHECK(gpio_pulldown_dis((gpio_num_t)BUTTON_PIN));
 }
 
-void thread_LoRa(void *pvParameters)
-{
-	int temp = 0;
-	int air_humidity = 0;
-	int soil_humidity = 0;
-	int wind_speed = 0;
-	int rain = 0;
-	int batt = 0;
-	dht11_t dht11_sensor;
-	dht11_sensor.dht11_pin = CONFIG_DHT11_PIN;
-	
-	loraManager.init();
-	struct timeval now;
-    gettimeofday(&now, NULL);
-    
-	if(main_tower && !bluetooth_comm)
-    {
-		temp = temperature();
-		printf("Temperature: %.1f C \n", (float)temp/10.0);
-		vTaskDelay(100/portTICK_PERIOD_MS);
-		printf("\nDTH11 sensor:\n");
-		if(!dht11_read(&dht11_sensor, CONFIG_CONNECTION_TIMEOUT))
-		{  
-//		printf("[Temperature]> %.2f \n",dht11_sensor.temperature);
-//		printf("[Humidity]> %.2f \n",dht11_sensor.humidity);
-			air_humidity = (int)dht11_sensor.humidity;
-			printf("Air Humidity: %d%% \n", air_humidity);
-		}
-		vTaskDelay(100/portTICK_PERIOD_MS);
-		printf("\nSoil_sensor read...\n");
-		soil_humidity = adc.measure_soil();
-		printf("Voltage: %.3f V \n", (float)soil_humidity/1000.0);
-		vTaskDelay(100/portTICK_PERIOD_MS);
-		printf("\nRain_sensor read...\n");
-		rain = adc.measure_rain();
-		printf("Voltage: %.3f V \n", (float)rain/1000.0);
-		vTaskDelay(100/portTICK_PERIOD_MS);
-		printf("\nWind sensor:\n");
-		wind_speed = adc.measure_wind();
-		printf("Voltage: %.3f V \n", (float)wind_speed/1000.0);
-		vTaskDelay(100/portTICK_PERIOD_MS);
-		printf("\nBatteries:\n");
-		batt = adc.measure_batt();
-		printf("Voltage: %.3f V \n\n", (float)batt/1000.0);
-		vTaskDelay(100/portTICK_PERIOD_MS);
-		int send_len = sprintf((char *)buf,"MEASUREMENT");
-		vTaskDelay(500 / portTICK_PERIOD_MS);
-		loraManager.sendPackage(buf, send_len, 0,false,false,temp,air_humidity,soil_humidity,wind_speed,rain);
-//		loraManager.sendPackage(buf, send_len, 0,true);
-	}
-	else
-	{
-		loraManager.receivePackage();
-	}
-	
-	
-    loraManager.setInitialTime(now);
-    
-	while(1) {
-		if(loraManager.teste)
-		{
-			loraManager.teste = false;
-			vTaskDelay(10000 / portTICK_PERIOD_MS);
-			loraManager.sendPackage((uint8_t*)"Deu certo!", 11,loraManager.getBluetoothTower(),true,true);
-		}
-		
-		loraManager.exec();
-	} 
-}
+//void thread_LoRa(void *pvParameters)
+//{
+//	int temp = 0;
+//	int air_humidity = 0;
+//	int soil_humidity = 0;
+//	int wind_speed = 0;
+//	int rain = 0;
+//	int batt = 0;
+//	dht11_t dht11_sensor;
+//	dht11_sensor.dht11_pin = CONFIG_DHT11_PIN;
+//	
+//	loraManager.init();
+//	struct timeval now;
+//    gettimeofday(&now, NULL);
+//    
+//	if(main_tower && !bluetooth_comm)
+//    {
+//		temp = temperature();
+//		printf("Temperature: %.1f C \n", (float)temp/10.0);
+//		vTaskDelay(100/portTICK_PERIOD_MS);
+//		printf("\nDTH11 sensor:\n");
+//		if(!dht11_read(&dht11_sensor, CONFIG_CONNECTION_TIMEOUT))
+//		{  
+////		printf("[Temperature]> %.2f \n",dht11_sensor.temperature);
+////		printf("[Humidity]> %.2f \n",dht11_sensor.humidity);
+//			air_humidity = (int)dht11_sensor.humidity;
+//			printf("Air Humidity: %d%% \n", air_humidity);
+//		}
+//		vTaskDelay(100/portTICK_PERIOD_MS);
+//		printf("\nSoil_sensor read...\n");
+//		soil_humidity = adc.measure_soil();
+//		printf("Voltage: %.3f V \n", (float)soil_humidity/1000.0);
+//		vTaskDelay(100/portTICK_PERIOD_MS);
+//		printf("\nRain_sensor read...\n");
+//		rain = adc.measure_rain();
+//		printf("Voltage: %.3f V \n", (float)rain/1000.0);
+//		vTaskDelay(100/portTICK_PERIOD_MS);
+//		printf("\nWind sensor:\n");
+//		wind_speed = adc.measure_wind();
+//		printf("Voltage: %.3f V \n", (float)wind_speed/1000.0);
+//		vTaskDelay(100/portTICK_PERIOD_MS);
+//		printf("\nBatteries:\n");
+//		batt = adc.measure_batt();
+//		printf("Voltage: %.3f V \n\n", (float)batt/1000.0);
+//		vTaskDelay(100/portTICK_PERIOD_MS);
+//		int send_len = sprintf((char *)buf,"MEASUREMENT");
+//		vTaskDelay(500 / portTICK_PERIOD_MS);
+//		loraManager.sendPackage(buf, send_len, 0,false,false,temp,air_humidity,soil_humidity,wind_speed,rain);
+////		loraManager.sendPackage(buf, send_len, 0,true);
+//	}
+//	else
+//	{
+//		loraManager.receivePackage();
+//	}
+//	
+//	
+//    loraManager.setInitialTime(now);
+//    
+//	while(1) {
+//		if(loraManager.teste)
+//		{
+//			loraManager.teste = false;
+//			vTaskDelay(10000 / portTICK_PERIOD_MS);
+//			loraManager.sendPackage((uint8_t*)"Deu certo!", 11,loraManager.getBluetoothTower(),true,true);
+//		}
+//		
+//		loraManager.exec();
+//	} 
+//}
 
 void thread_Bluetooth(void *pvParameters)
 {
@@ -191,8 +186,8 @@ extern "C" void app_main()
 		 bluetooth_comm = true;
 	}
 		
-	int paramLoRa = 2;
-    xTaskCreate( thread_LoRa, "THREAD_LORA", STACK_SIZE, &paramLoRa, tskIDLE_PRIORITY, &xHandleLoRa );
-    configASSERT( xHandleLoRa );
+//	int paramLoRa = 2;
+//    xTaskCreate( thread_LoRa, "THREAD_LORA", STACK_SIZE, &paramLoRa, tskIDLE_PRIORITY, &xHandleLoRa );
+//    configASSERT( xHandleLoRa );
 
 }
