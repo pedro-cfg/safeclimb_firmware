@@ -10,9 +10,9 @@
 #define GLOBAL_TIMEOUT 120
 #define LOCAL_TIMEOUT 10
 
-#define TOWER_NUMBER 0
-#define MAIN_TOWER 0
-#define SERVER_TOWER 1
+#define TOWER_NUMBER 2
+#define MAIN_TOWER 1
+#define SERVER_TOWER 0
 
 #define BYTE_TIME 100
 #define EXTRA_TIME 1000
